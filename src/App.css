@@ -38,10 +38,7 @@ html {
 .section_Slider {
    max-width: 100%;
 }
-.slide
-{
-  
-}
+
 .slides div:nth-child(1)
 {
   background:url("/Static imgs/HeroSlider_1.png");
