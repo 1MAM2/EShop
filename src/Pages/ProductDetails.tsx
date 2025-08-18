@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useProducts } from "../Context/ProductContext";
 import { useCategories } from "../Context/CategoryContext";
@@ -16,7 +16,6 @@ const ProductDetails = () => {
     error,
     fetchSingleProduct,
     clearSingleProduct,
-    products,
   } = useProducts();
 
   const productId = Number(id);

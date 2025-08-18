@@ -1,4 +1,3 @@
-import React from "react";
 import type { ProductReadDTO } from "../types/ProductTypes/PrdocutReadDTO";
 import { useKeenSlider } from "keen-slider/react";
 import Product from "./Product";

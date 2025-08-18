@@ -1,4 +1,3 @@
-import React from "react";
 import { useCart } from "../Context/CartContext";
 import { Link } from "react-router-dom";
 import CartItem from "../Components/CartItem";
@@ -6,7 +5,6 @@ import CartItem from "../Components/CartItem";
 const Cart = () => {
   const {
     cartItems,
-    isLoading,
     error,
     decreaseQuantity,
     increaseQuantity,

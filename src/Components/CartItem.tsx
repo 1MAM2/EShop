@@ -1,4 +1,3 @@
-import React from "react";
 import type { CartReadDTO } from "../types/CartTypes/CartReadDTO";
 import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
 

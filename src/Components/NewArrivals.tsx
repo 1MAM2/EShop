@@ -1,5 +1,3 @@
-import React from "react";
-import Product from "./Product";
 import type { ProductReadDTO } from "../types/ProductTypes/PrdocutReadDTO";
 import ProductSlider from "./ProductSlider";
 

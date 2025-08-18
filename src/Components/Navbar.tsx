@@ -4,7 +4,6 @@ import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Categories from "./Categories";
 import { useCart } from "../Context/CartContext";
-import { useEffect, useState } from "react";
 
 const Navbar = () => {
   const { cartItems } = useCart();
