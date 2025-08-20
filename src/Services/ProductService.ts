@@ -3,7 +3,7 @@ import type { ProductCreateDTO } from "../types/ProductTypes/ProductCreateDTO";
 import type { ProductUpdateDTO } from "../types/ProductTypes/ProductUpdateDTO";
 import axios from "axios";
 
-const BASE_URL: string = "http://localhost:5039/api/product";
+const BASE_URL: string = "https://productapi.onrender.com/api/product";
 
 export const ProductService = {
   async getAll(): Promise<ProductReadDTO[]> {

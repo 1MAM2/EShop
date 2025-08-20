@@ -4,7 +4,7 @@ import type { ProductReadDTO } from "../types/ProductTypes/PrdocutReadDTO";
 import type { CategoryCreateDTO } from "../types/CategoryTypes/CategoryCreateDTO";
 import type { CategoryUpdateDTO } from "../types/CategoryTypes/CategoryUpdateDTO";
 
-const BASE_URL: string = "http://localhost:5039/api/category";
+const BASE_URL: string = "https://productapi.onrender.com/api/category";
 
 export const CategoryService = {
   async getAll(): Promise<CategoryReadDTO[]> {
