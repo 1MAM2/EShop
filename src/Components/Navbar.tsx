@@ -1,4 +1,3 @@
-// import React from "react";
 import { PiShoppingCartBold } from "react-icons/pi";
 import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
