@@ -13,16 +13,14 @@ const Navbar = () => {
   // }
 
   return (
-    <nav className="bg-blue-800  text-white">
+    <nav className="bg-blue-900  text-white">
       <div className="flex justify-between items-center h-[80px] px-[25px] xl:text-4xl xl:h-[80px]">
-        <div>
+        <div className="w-[200px] h-[100px] ">
           <Link to={"/"}>
-            <b className="text-3xl cursor-pointer hover:text-sky-300 duration-300 transition-all xl:text-6xl">
-              Eshop
-            </b>
+            <img src="/Static imgs/eshop_logo_transparent.png" alt="ESHOP" className="w-full h-full bg-transparent mix-blend-lighten"  />
           </Link>
         </div>
-        <ul className="flex text-2xl sm:text-5xl justify-between items-center gap-[20px] xl:text-6xl">
+        <ul className="flex text-2xl sm:text-5xl justify-between items-center gap-[20px] xl:text-5xl">
           <Link to={"/browse"}>
             <li className="hover:text-sky-300 transition-all duration-300">
               Shop
@@ -30,12 +28,12 @@ const Navbar = () => {
           </Link>
           <Link to={"/"}>
             {/* Sonra yapılacak */}
-            <li className="text-2xl sm:text-5xl hover:text-sky-300 transition-all duration-300 xl:text-6xl">
+            <li className="text-2xl sm:text-4xl hover:text-sky-300 transition-all duration-300 xl:text-5xl">
               <FaUserCircle />
             </li>
           </Link>
           <Link to={"/cart"}>
-            <li className="text-2xl sm:text-4xl hover:text-sky-300 transition-all duration-300 relative xl:text-6xl">
+            <li className="text-2xl sm:text-4xl hover:text-sky-300 transition-all duration-300 relative xl:text-5xl">
               <PiShoppingCartBold />
               {cartItems !== null && cartItems.length > 0 && (
                 <span className="absolute text-center top-4 left-3 text-2xl w-8 h-8 sm:top-6 sm:left-5 sm:w-12 sm:h-12 sm:text-4xl  bg-sky-600 rounded-full flex items-center justify-center xl:top-8 xl:left-9 xl:w-10 xl:h-10 xl:text-4xl">
