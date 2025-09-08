@@ -26,7 +26,7 @@ const Navbar = () => {
               Shop
             </li>
           </Link>
-          <Link to={"/"}>
+          <Link to={"/account"}>
             {/* Sonra yapılacak */}
             <li className="text-2xl sm:text-4xl hover:text-sky-300 transition-all duration-300 xl:text-5xl">
               <FaUserCircle />
