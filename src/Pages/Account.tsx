@@ -21,7 +21,7 @@ const Account = () => {
       Password: password.trim(),
     };
     await login(req);
-    toast.error("Password or UserName wrong!!!!!")
+    
     if (isAuthenticated) {
       toast.success("Welcome back!!!!")
       navigate("/")
@@ -60,8 +60,7 @@ const Account = () => {
     setAddress("");
     setPassword("");
     setEmail("");
-    navigate("/account")
-    setIsHaveAnAccount(true)
+    setIsHaveAnAccount(true);
     } catch (error) {
       console.error(error);
     }
