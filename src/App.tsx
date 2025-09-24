@@ -8,6 +8,7 @@ import Shop from "./Pages/Shop";
 import Footer from "./Components/Footer";
 import ProductDetails from "./Pages/ProductDetails";
 import { CartProvider } from "./Context/CartContext";
+import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <>
@@ -21,6 +22,7 @@ function App() {
             <Route path="/browse" element={<Shop />} />
             <Route path="/product/:id" element={<ProductDetails />} />
           </Routes>
+          <ToastContainer position="top-right" />
         </div>
         <Footer />
       </CartProvider>

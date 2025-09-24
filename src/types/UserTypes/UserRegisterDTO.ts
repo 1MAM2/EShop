@@ -2,6 +2,9 @@
 
 export type UserRegisterDTO = {
     UserName:string,
-    Password:string,
+    PasswordHash:string,
     Role:string,
+    Email:string,
+    Address:string,
+
 }
