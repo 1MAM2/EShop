@@ -3,24 +3,28 @@ import { useAuth } from "../Context/AuthContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import type { UserRegisterDTO } from "../types/UserTypes/UserRegisterDTO";
+import { useNavigate } from "react-router-dom";
 const Account = () => {
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [isHaveAnAccount, setIsHaveAnAccount] = useState(false);
-  const { isAuthenticated, logout, login,register } = useAuth();
+   const navigate = useNavigate();
+  const [isHaveAnAccount, setIsHaveAnAccount] = useState(true);
+  const { isAuthenticated, login,register } = useAuth();
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const req = {
-      UserName: userName,
-      Password: password,
+      UserName: userName.trim(),
+      Password: password.trim(),
     };
     await login(req);
+    toast.error("Password or UserName wrong!!!!!")
     if (isAuthenticated) {
-      console.log("giriş yapıldı");
+      toast.success("Welcome back!!!!")
+      navigate("/")
     }
   };
   const handleRegister = async (e:React.FormEvent) =>
@@ -45,13 +49,19 @@ const Account = () => {
     }
     const req:UserRegisterDTO ={
       UserName :userName,
-      PasswordHash:password,
+      Password:password,
       Role:"Customer",
       Email:email,
       Address:address,
     }
     await register(req);
     toast.success("Your account has been successfully created!");
+    setUserName("");
+    setAddress("");
+    setPassword("");
+    setEmail("");
+    navigate("/account")
+    setIsHaveAnAccount(true)
     } catch (error) {
       console.error(error);
     }
