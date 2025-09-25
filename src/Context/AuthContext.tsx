@@ -3,7 +3,7 @@ import { authService } from "../Services/AuthService";
 import type { UserLoginDTO } from "../types/UserTypes/UserLoginDTO";
 import type { UserRegisterDTO } from "../types/UserTypes/UserRegisterDTO";
 import type { TokenResponseDTO } from "../types/UserTypes/TokenResponseDTO";
-import { toast } from "react-toastify";
+
 
 const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
@@ -31,10 +31,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem(ACCESS_TOKEN_KEY, tokens.accessToken);
     localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
     setAccessToken(tokens.accessToken);
-      if(tokens  == null)
-      {
-        toast.error("Password or UserName wrong!!!!!")
-      }
   };
 
   const register = async (req: UserRegisterDTO) => {

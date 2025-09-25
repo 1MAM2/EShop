@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { CartReadDTO } from "../types/CartTypes/CartReadDTO";
+import { toast } from "react-toastify";
 
 interface CartContextValue {
   cartItems: CartReadDTO[];
@@ -49,7 +50,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         Quantity: 1,
         ImgUrl: product.ImgUrl,
       });
-      alert("Ürün Başarıyla eklendi.");
+      toast.success("Ürün Başarıyla eklendi.");
     }
     //  if (!Array.isArray(cartItems)) {
     //     console.error("cartItems bir dizi değil",cartItems)

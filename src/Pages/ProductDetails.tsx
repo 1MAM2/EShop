@@ -5,6 +5,7 @@ import { useCategories } from "../Context/CategoryContext";
 import Product from "../Components/Product";
 import type { CartReadDTO } from "../types/CartTypes/CartReadDTO";
 import { useCart } from "../Context/CartContext";
+import Loading from "../Components/Loading";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -38,7 +39,7 @@ const ProductDetails = () => {
 
   // loading & error
   if (Number.isNaN(productId)) return <p>Geçersiz ürün ID'si.</p>;
-  if (isLoading && !product) return <p>Yükleniyor...</p>;
+  if (isLoading && !product) return <Loading/>
   if (error) return <p>Hata: {error}</p>;
   if (!product) return <p>Ürün bulunamadı.</p>;
 

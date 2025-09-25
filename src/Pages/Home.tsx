@@ -2,7 +2,7 @@ import HeroSlider from "../Components/HeroSlider";
 import NewArrivals from "../Components/NewArrivals";
 import HomeDiscount from "../Components/HomeDiscount";
 import { useProducts } from "../Context/ProductContext";
-import { BeatLoader } from "react-spinners";
+import Loading from "../Components/Loading";
 
 const Home = () => {
   const { products, isLoading } = useProducts();
@@ -10,9 +10,7 @@ const Home = () => {
   return (
     <div>
       {isLoading ? (
-        <div className="h-[100vh] flex items-center justify-center">
-          <BeatLoader size={50} color="#0b3af8" />
-        </div>
+        <Loading />
       ) : (
         <div>
           <HeroSlider />

@@ -1,5 +1,5 @@
 import type { CartReadDTO } from "../types/CartTypes/CartReadDTO";
-import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
+import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 
 type CompProps = CartReadDTO & {
   increaseQuantity: (productId: number) => void;
@@ -15,7 +15,7 @@ const CartItem = (props: CompProps) => {
           className="cartButton"
           onClick={() => props.removeCartItem(Number(props.ProductId))}
         >
-          <FaTimes className="text-red-900 bg-none text-3xl md:text-5xl" />
+          <FaTrash className="text-red-900 bg-none text-3xl md:text-4xl hover:text-red-700" />
         </button>
       </div>
       <div className="cartProductImage w-16 md:w-32">
@@ -29,14 +29,14 @@ const CartItem = (props: CompProps) => {
           className="cartButton mx-2 md:mx-4"
           onClick={() => props.decreaseQuantity(Number(props.ProductId))}
         >
-          <FaMinus className="text-sm md:text-2xl" />
+          <FaMinus className="text-sm md:text-2xl text-cyan-800 hover:text-cyan-600" />
         </button>
         <span className="text-lg md:text-3xl">{props.Quantity}</span>
         <button
           className="cartButton mx-2 md:mx-4"
           onClick={() => props.increaseQuantity(Number(props.ProductId))}
         >
-          <FaPlus className="text-sm md:text-2xl" />
+          <FaPlus className="text-sm md:text-2xl text-cyan-800 hover:text-cyan-600" />
         </button>
       </div>
       <div className="text-green-600 font-bold text-sm md:text-3xl lg:text-3xl bg-green-100 p-4 rounded-lg text-center">{props.Quantity * props.Price} $</div>
