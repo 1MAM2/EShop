@@ -13,7 +13,7 @@ const Account = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [isHaveAnAccount, setIsHaveAnAccount] = useState(true);
-  const { isAuthenticated, login, register } = useAuth();
+  const { login, register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,13 +23,9 @@ const Account = () => {
         UserName: userName.trim(),
         Password: password.trim(),
       };
-      await login(req);
-
-      if (isAuthenticated) {
+      login(req);
         toast.success("Welcome back!!!!");
-        setLoading(false);
         navigate("/");
-      }
     } catch (error) {
       toast.error("Password or UserName wrong!!!!!");
       setLoading(false);

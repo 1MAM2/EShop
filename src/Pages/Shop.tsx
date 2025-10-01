@@ -17,7 +17,7 @@ const Shop = () => {
   const categoryIdParam = searchParams.get("cat");
   const categoryId = categoryIdParam ? Number(categoryIdParam) : undefined;
 
-  const [searchString, setSearchStirng] = useState("");
+  const [searchString, setSearchString] = useState("");
   const [isLoading, setIsloading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -69,19 +69,21 @@ const Shop = () => {
         <Loading />
       ) : (
         <div className="shopPage flex  justify-center flex-col items-center sm:">
-          <div className="searchArea text-4xl w-60 h-20 bg-cyan-900 text-white focus:outline-none my-3">
+          <div className="w-full sticky top-0 bg-gray-50 py-3 px-6 shadow-md z-50">
             <form
-              method="post"
-              className="flex justify-center flex-col items-center"
+              onSubmit={(e) => e.preventDefault()}
+              className="w-full max-w-md mx-auto"
             >
               <input
-                placeholder="Search Item"
+                type="text"
+                placeholder="Search items..."
                 value={searchString}
-                onChange={(e) => setSearchStirng(e.target.value)}
-                className="w-52 my-3"
+                onChange={(e) => setSearchString(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 text-gray-800 placeholder-gray-400"
               />
             </form>
           </div>
+
           <div className="listProductsShopPage grid grid-cols-1 sm:grid-cols-2 sm:gap-10 md:grid-cols-2 place-items-center lg:grid-cols-4  my-6 ">
             {filteredList.map((item) => (
               <Product props={item} key={item.Id} />

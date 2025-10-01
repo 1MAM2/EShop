@@ -18,7 +18,7 @@ const processQueue = (error: any, token: string | null = null) => {
   refreshQueue = [];
 };
 
-// Request Interceptor → Token ekleme
+// Request Interceptor  Token ekleme
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem(ACCESS_TOKEN_KEY);
   if (token && config.headers) {
@@ -27,7 +27,7 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-// Response Interceptor → 401 olduğunda refresh deneme
+// Response Interceptor  401 olduğunda refresh deneme
 api.interceptors.response.use(
   (res: AxiosResponse) => res,
   async (err: AxiosError) => {
@@ -52,7 +52,6 @@ api.interceptors.response.use(
         const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
         const resp = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/refresh-token`, {
           refreshToken,
-          userId: 0, // backend gereksinimine göre değiştir
         });
 
         const { accessToken, refreshToken: newRefresh } = resp.data;

@@ -3,9 +3,14 @@ import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Categories from "./Categories";
 import { useCart } from "../Context/CartContext";
+import { useAuth } from "../Context/AuthContext";
 
 const Navbar = () => {
   const { cartItems } = useCart();
+  const{isAuthenticated} = useAuth();
+ console.log(isAuthenticated);
+ 
+  
   //Hatalı koşul sağlanıyro render edilyor sonra tekrar koşul sağlanıyor tekrar render ediliyor Hata
   // if (cartItems !== null) {
   //   console.log(cartItems.length);
@@ -26,7 +31,7 @@ const Navbar = () => {
               Shop
             </li>
           </Link>
-          <Link to={"/account"}>
+          <Link to={isAuthenticated ? "/profile":"/account"}>
             {/* Sonra yapılacak */}
             <li className="text-2xl sm:text-4xl hover:text-sky-300 transition-all duration-300 xl:text-5xl">
               <FaUserCircle />

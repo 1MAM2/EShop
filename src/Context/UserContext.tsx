@@ -1,11 +1,13 @@
 import { createContext, useContext, useState } from "react";
 import type { UserReadDTO } from "../types/UserTypes/UserReadDTO";
 import { UserService } from "../Services/UserService";
+import type { UserUpdateDTO } from "../types/UserTypes/UserUpdateDTO";
 
 interface UserContextValue {
-  user: UserReadDTO[];
+  user: UserReadDTO | null;
   fetchUserData: () => Promise<void>;
   softDeleteAccount: () => Promise<void>;
+  updateUserAsync: (req:UserUpdateDTO) => Promise<void>
   isLoading: boolean;
   error: string | null;
 }
@@ -13,7 +15,7 @@ interface UserContextValue {
 const UserContext = createContext<UserContextValue | null>(null);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserReadDTO[]>([]);
+  const [user, setUser] = useState<UserReadDTO | null>(null);
   const [isLoading, setIsloading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
@@ -32,6 +34,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const res = await UserService.deleteAccount();
     return res;
   };
+  const updateUserAsync = async (req:UserUpdateDTO) =>
+  {
+    const res = await UserService.updateUser(req);
+    return res;
+  }
   return (
     <UserContext.Provider
       value={{
@@ -40,6 +47,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         error,
         fetchUserData,
         softDeleteAccount,
+        updateUserAsync
       }}
     >
       {children}
