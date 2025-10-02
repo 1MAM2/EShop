@@ -8,14 +8,6 @@ import { useAuth } from "../Context/AuthContext";
 const Navbar = () => {
   const { cartItems } = useCart();
   const{isAuthenticated} = useAuth();
- console.log(isAuthenticated);
- 
-  
-  //Hatalı koşul sağlanıyro render edilyor sonra tekrar koşul sağlanıyor tekrar render ediliyor Hata
-  // if (cartItems !== null) {
-  //   console.log(cartItems.length);
-  //   setLength(cartItems.length)
-  // }
 
   return (
     <nav className="bg-blue-900  text-white">

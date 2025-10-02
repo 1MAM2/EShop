@@ -1,14 +1,24 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../Context/UserContext";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, useAuth } from "../Context/AuthContext";
+import {
+  ACCESS_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+  useAuth,
+} from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { OrderService } from "../Services/OrderService";
+import type { OrderReadDTO } from "../types/OrderTypes/OrderReadDTO";
+import Loading from "../Components/Loading";
 
 const Profile = () => {
   const { user, fetchUserData, updateUserAsync } = useUser();
   const [isEditing, setIsEditing] = useState(false);
-  const{logout} = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
+  //ORDERS
+  const [orders, setOrders] = useState<OrderReadDTO[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Form state
   const [userName, setUserName] = useState("");
@@ -17,8 +27,18 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUserData();
+    const fetchOrders = async () => {
+      try {
+        const data = await OrderService.userGetAllOrder();
+        setOrders(data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
   }, []);
-
   useEffect(() => {
     if (user) {
       setUserName(user.UserName);
@@ -37,14 +57,19 @@ const Profile = () => {
     fetchUserData(); // Güncel veriyi çek
   };
 
-  const handleLogout = async () =>
-  {
-     await logout();
-     localStorage.removeItem(ACCESS_TOKEN_KEY);
-     localStorage.removeItem(REFRESH_TOKEN_KEY);
-     toast.warning("Logout is success");
-     navigate("/"); 
-  }
+  const handleLogout = async () => {
+    await logout();
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    toast.warning("Logout is success");
+    navigate("/");
+  };
+  if (loading)
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
 
   return (
     <div className="px-6 md:px-20 py-10 bg-gray-100 min-h-screen">
@@ -94,7 +119,7 @@ const Profile = () => {
         </div>
 
         {/* Buttons */}
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 gap-4 justify-around">
           {isEditing ? (
             <>
               <button
@@ -120,29 +145,43 @@ const Profile = () => {
           )}
           <button
             onClick={handleLogout}
-            className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition w-[80px]"
           >
             Logout
           </button>
         </div>
       </div>
       <div className="max-w-3xl mx-auto mt-10">
-        <h2 className="text-xl font-semibold mb-4">Your Orders</h2>
+        <h1 className="text-2xl font-bold mb-6">My Orders</h1>
+
+        {orders.length === 0 && (
+          <p className="text-gray-500">You haven't placed any orders yet.</p>
+        )}
+
         <div className="space-y-4">
-          <div className="p-4 bg-white shadow rounded-lg flex justify-between items-center">
-            <div>
-              <p className="font-medium">Order #12345</p>
-              <p className="text-gray-500 text-sm">Placed on 01 Oct 2025</p>
+          {orders.map((order) => (
+            <div
+              key={order.createdAt + order.totalPrice}
+              className="p-4 bg-white shadow rounded-lg flex justify-between items-center"
+            >
+              <div>
+                <p className="font-medium">
+                  Order #{order.userId}-
+                  {order.createdAt.slice(0, 10).replace(/-/g, "")}
+                </p>
+                <p className="text-gray-500 text-sm">
+                  Placed on{" "}
+                  {new Date(order.createdAt).toLocaleDateString("en-US", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </p>
+                <p className="text-gray-500 text-sm">Status: {order.status}</p>
+              </div>
+              <p className="font-semibold">${order.totalPrice.toFixed(2)}</p>
             </div>
-            <p className="font-semibold">$59.99</p>
-          </div>
-          <div className="p-4 bg-white shadow rounded-lg flex justify-between items-center">
-            <div>
-              <p className="font-medium">Order #12346</p>
-              <p className="text-gray-500 text-sm">Placed on 25 Sep 2025</p>
-            </div>
-            <p className="font-semibold">$120.00</p>
-          </div>
+          ))}
         </div>
       </div>
     </div>

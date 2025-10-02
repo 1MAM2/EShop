@@ -7,39 +7,65 @@ type CompProps = CartReadDTO & {
   removeCartItem: (productId: number) => void;
 };
 
-const CartItem = (props: CompProps) => {
+const CartItem = ({
+  ProductId,
+  ProductName,
+  ImgUrl,
+  Price,
+  Quantity,
+  increaseQuantity,
+  decreaseQuantity,
+  removeCartItem,
+}: CompProps) => {
   return (
-    <div className="px-2 grid grid-cols-5  w-full place-items-center cartItem shadow-lg shadow-gray-400 hover:bg-gray-300 transition-all my-10 h-[80px] gap-2">
-      <div className="flex justify-center items-center ">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all">
+      
+      {/* Silme Butonu */}
+      <button
+        onClick={() => removeCartItem(Number(ProductId))}
+        className="text-red-600 hover:text-red-800 p-2 rounded-full transition"
+        title="Remove Item"
+      >
+        <FaTrash className="text-xl md:text-2xl" />
+      </button>
+
+      {/* Ürün Görseli */}
+      <div className="w-24 md:w-32 h-24 md:h-32 flex-shrink-0">
+        <img
+          src={ImgUrl}
+          alt={ProductName}
+          className="w-full h-full object-contain rounded-xl"
+        />
+      </div>
+
+      {/* Ürün Adı */}
+      <div className="flex-1 text-center md:text-left">
+        <p className="text-sm md:text-lg lg:text-xl font-semibold text-gray-800 truncate">
+          {ProductName}
+        </p>
+      </div>
+
+      {/* Miktar Butonları */}
+      <div className="flex items-center gap-2 md:gap-4">
         <button
-          className="cartButton"
-          onClick={() => props.removeCartItem(Number(props.ProductId))}
+          onClick={() => decreaseQuantity(Number(ProductId))}
+          className="bg-gray-200 hover:bg-gray-300 p-1 md:p-2 rounded-lg transition"
         >
-          <FaTrash className="text-red-900 bg-none text-3xl md:text-4xl hover:text-red-700" />
+          <FaMinus className="text-sm md:text-lg text-cyan-700" />
+        </button>
+        <span className="text-lg md:text-xl font-medium">{Quantity}</span>
+        <button
+          onClick={() => increaseQuantity(Number(ProductId))}
+          className="bg-gray-200 hover:bg-gray-300 p-1 md:p-2 rounded-lg transition"
+        >
+          <FaPlus className="text-sm md:text-lg text-cyan-700" />
         </button>
       </div>
-      <div className="cartProductImage w-16 md:w-32">
-        <img src={props.ImgUrl} className="w-full " />
+
+      {/* Fiyat */}
+      <div className="text-green-700 font-bold text-sm md:text-lg lg:text-xl bg-green-100 px-4 py-2 rounded-xl text-center min-w-[80px]">
+        ${(Quantity * Price).toFixed(2)}
       </div>
-      <div className="productName text-sm md:text-3xl font-bold text-gray-800 truncate">
-        <p>{props.ProductName}</p>
-      </div>
-      <div className="incDec flex  w-[30px] md:w-[60px]">
-        <button
-          className="cartButton mx-2 md:mx-4"
-          onClick={() => props.decreaseQuantity(Number(props.ProductId))}
-        >
-          <FaMinus className="text-sm md:text-2xl text-cyan-800 hover:text-cyan-600" />
-        </button>
-        <span className="text-lg md:text-3xl">{props.Quantity}</span>
-        <button
-          className="cartButton mx-2 md:mx-4"
-          onClick={() => props.increaseQuantity(Number(props.ProductId))}
-        >
-          <FaPlus className="text-sm md:text-2xl text-cyan-800 hover:text-cyan-600" />
-        </button>
-      </div>
-      <div className="text-green-600 font-bold text-sm md:text-3xl lg:text-3xl bg-green-100 p-4 rounded-lg text-center">{props.Quantity * props.Price} $</div>
     </div>
   );
 };

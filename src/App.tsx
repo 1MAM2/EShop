@@ -11,6 +11,7 @@ import { CartProvider } from "./Context/CartContext";
 import { ToastContainer } from "react-toastify";
 import Profile from "./Pages/Profile";
 import { PrivateRoute } from "./Components/PrivateRoute";
+import Checkout from "./Pages/Checkout";
 function App() {
   return (
     <>
@@ -23,10 +24,16 @@ function App() {
             <Route path={"/cart"} element={<Cart />} />
             <Route path="/browse" element={<Shop />} />
 
-            <Route path="/profile" element={<PrivateRoute>
-              <Profile />
-            </PrivateRoute>} />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
             <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/checkout" element={<Checkout />} />
           </Routes>
           <ToastContainer position="top-right" />
         </div>

@@ -7,6 +7,7 @@ interface CartContextValue {
   isLoading: boolean;
   error: string | null;
   fetchCartItems: () => void;
+  clearCart: () => void;
   addToCart: (cartItem: CartReadDTO) => void;
   increaseQuantity: (productId: number) => void;
   decreaseQuantity: (productId: number) => void;
@@ -104,6 +105,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("cart", JSON.stringify(newCart));
     setCartItems([...newCart]);
   };
+  const clearCart = () =>
+  {
+    setCartItems([]);
+    localStorage.removeItem("cart");
+  }
 
   useEffect(() => {
     fetchCartItems();
@@ -117,6 +123,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         increaseQuantity,
         decreaseQuantity,
         removeCartItem,
+        clearCart,
         cartItems,
         isLoading,
         error,

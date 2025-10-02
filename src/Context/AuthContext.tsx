@@ -3,7 +3,6 @@ import { authService } from "../Services/AuthService";
 import type { UserLoginDTO } from "../types/UserTypes/UserLoginDTO";
 import type { UserRegisterDTO } from "../types/UserTypes/UserRegisterDTO";
 import type { TokenResponseDTO } from "../types/UserTypes/TokenResponseDTO";
-import { useNavigate } from "react-router-dom";
 
 
 export const ACCESS_TOKEN_KEY = "accessToken";
@@ -30,7 +29,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const tokens: TokenResponseDTO = await authService.login(req);
     localStorage.setItem(ACCESS_TOKEN_KEY, tokens.accessToken);
     localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
-    console.log(tokens,"Tokenlar");
     setAccessToken(tokens.accessToken);
     setIsAuthenticated(true);
   };
