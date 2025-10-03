@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import Profile from "./Pages/Profile";
 import { PrivateRoute } from "./Components/PrivateRoute";
 import Checkout from "./Pages/Checkout";
+import ConfirmEmail from "./Pages/ConfirmEmail";
 function App() {
   return (
     <>
@@ -23,6 +24,7 @@ function App() {
             <Route path={"/account"} element={<Account />} />
             <Route path={"/cart"} element={<Cart />} />
             <Route path="/browse" element={<Shop />} />
+            <Route path="/confirm-email" element={<ConfirmEmail />} />
 
             <Route
               path="/profile"
