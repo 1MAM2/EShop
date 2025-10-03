@@ -23,7 +23,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.getItem(ACCESS_TOKEN_KEY)
   );
   const[isAuthenticated,setIsAuthenticated] = useState<boolean>(!!localStorage.getItem(ACCESS_TOKEN_KEY));
-  
 
   const login = async (req: UserLoginDTO) => {
     const tokens: TokenResponseDTO = await authService.login(req);

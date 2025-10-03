@@ -7,7 +7,7 @@ import { useAuth } from "../Context/AuthContext";
 
 const Navbar = () => {
   const { cartItems } = useCart();
-  const{isAuthenticated} = useAuth();
+  const{accessToken} = useAuth();
 
   return (
     <nav className="bg-blue-900  text-white">
@@ -23,7 +23,7 @@ const Navbar = () => {
               Shop
             </li>
           </Link>
-          <Link to={isAuthenticated ? "/profile":"/account"}>
+          <Link to={accessToken == undefined ? "/account":"/profile"}>
             {/* Sonra yapılacak */}
             <li className="text-2xl sm:text-4xl hover:text-sky-300 transition-all duration-300 xl:text-5xl">
               <FaUserCircle />
