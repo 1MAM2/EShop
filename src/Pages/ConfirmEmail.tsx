@@ -11,7 +11,7 @@ const ConfirmEmail = () => {
 
     if (token && email) {
       fetch(
-        `https://asp-net-web-api-ym61.onrender.com/api/users/confirm-email?email=${email}&token=${encodeURIComponent(
+        `https://asp-net-web-api-ym61.onrender.com/api/auth/confirm-email?email=${email}&token=${encodeURIComponent(
           token
         )}`,
         {
