@@ -23,12 +23,19 @@ const Account = () => {
         UserName: userName.trim(),
         Password: password.trim(),
       };
-      login(req);
+      const res = await login(req);
+      if (res == false) {
+        setLoading(false);
+        return toast.error("Password or UserName wrong!!!!!");
+      } else {
+        setLoading(false);
         toast.success("Welcome back!!!!");
-        navigate("/");
+        return navigate("/");
+      }
     } catch (error) {
       toast.error("Password or UserName wrong!!!!!");
       setLoading(false);
+    } finally {
     }
   };
   const handleRegister = async (e: React.FormEvent) => {
@@ -57,22 +64,27 @@ const Account = () => {
         Email: email,
         Address: address,
       };
-      await register(req);
+      const res = await register(req);
+
+      console.log("Register bitti", res);
+
       toast.success("Your account has been successfully created!");
+      navigate("/");
       setUserName("");
       setAddress("");
       setPassword("");
       setEmail("");
       setIsHaveAnAccount(true);
     } catch (error) {
-      console.error(error);
+      console.error("Register hatası:", error);
+      toast.error("An error occurred during registration");
     }
   };
   return (
     <div className="h-[70vh] flex items-center justify-center">
       <div>
         {loading ? (
-          <Loading/>
+          <Loading />
         ) : isHaveAnAccount ? (
           <div>
             <div className="login bg-blue-900 m-4 p-4 rounded-4xl max-w-sm w-full text-white">

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useCart } from "../Context/CartContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { OrderService } from "../Services/OrderService";
+import type { OrderCreateDTO } from "../types/OrderTypes/OrderCreateDTO";
 
 const Checkout = () => {
   const [formData, setFormData] = useState({
@@ -30,6 +32,7 @@ const Checkout = () => {
     // Buraya ödeme veya sipariş işlemi eklenebilir
   };
   const CreateOrder = () => {
+    
     const { fullName, email, address, city, zip, cardNumber, expiry, cvv } =
       formData;
     if (!fullName) return toast.error("Full name is required");
@@ -41,7 +44,18 @@ const Checkout = () => {
     if (!cardNumber) return toast.error("CardNumber name is required");
     if (!expiry) return toast.error("Expiry date is required");
     if (!cvv) return toast.error("CVV date is required");
+
     toast.success("Success! Your payment has been received.");
+    const newOrder: OrderCreateDTO = {
+      TotalPrice: cartItems.reduce((sum, item) => sum + item.Price * item.Quantity, 0),
+      orderItems: cartItems.map(item => ({
+        productId: +item.ProductId,
+        quantity: item.Quantity,
+        unitPrice: item.Price
+      })),
+      OrderStatus: "Pending"
+    };
+    OrderService.createOrder(newOrder);
     clearCart();
     navigate("/");
   };

@@ -23,7 +23,7 @@ const Navbar = () => {
               Shop
             </li>
           </Link>
-          <Link to={accessToken == undefined ? "/account":"/profile"}>
+          <Link to={accessToken == undefined || null ? "/account":"/profile"}>
             {/* Sonra yapılacak */}
             <li className="text-2xl sm:text-4xl hover:text-sky-300 transition-all duration-300 xl:text-5xl">
               <FaUserCircle />

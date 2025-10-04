@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { OrderService } from "../Services/OrderService";
 import type { OrderReadDTO } from "../types/OrderTypes/OrderReadDTO";
 import Loading from "../Components/Loading";
+import api from "../Services/api";
 
 const Profile = () => {
   const { user, fetchUserData, updateUserAsync } = useUser();
@@ -20,16 +21,40 @@ const Profile = () => {
   const [orders, setOrders] = useState<OrderReadDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Form state
+  const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
+
+  const toggleOrder = (orderId: number) => {
+    setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
+  };
+
+  // Form stateler
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+      if (!token) return;
+
+      try {
+        // Örn: basit istek at, 401 dönerse refresh token devreye girsin
+        await api.get("/api/auth/protectedRoute");
+      } catch (err) {
+        console.error("Token expired, interceptor devreye girecek");
+      }
+    };
+
+    checkToken();
+  }, []);
 
   useEffect(() => {
     fetchUserData();
     const fetchOrders = async () => {
       try {
         const data = await OrderService.userGetAllOrder();
+        console.log(data);
+
         setOrders(data);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -61,8 +86,8 @@ const Profile = () => {
     await logout();
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
-    toast.warning("Logout is success");
     navigate("/");
+    toast.warning("Logout is success");
   };
   if (loading)
     return (
@@ -161,25 +186,28 @@ const Profile = () => {
         <div className="space-y-4">
           {orders.map((order) => (
             <div
-              key={order.createdAt + order.totalPrice}
+              key={order.OrderId}
               className="p-4 bg-white shadow rounded-lg flex justify-between items-center"
+              onClick={() => toggleOrder(order.OrderId)}
             >
               <div>
                 <p className="font-medium">
-                  Order #{order.userId}-
-                  {order.createdAt.slice(0, 10).replace(/-/g, "")}
+                  Order #{order.userId}-{order.CreatedAt}
                 </p>
                 <p className="text-gray-500 text-sm">
                   Placed on{" "}
-                  {new Date(order.createdAt).toLocaleDateString("en-US", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                  {order.CreatedAt
+                    ? new Date(order.CreatedAt).toLocaleDateString("en-US", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "Unknown"}{" "}
+                  {/* createdAt yoksa gösterilecek */}
                 </p>
-                <p className="text-gray-500 text-sm">Status: {order.status}</p>
+                <p className="text-gray-500 text-sm">Status: {order.Status}</p>
               </div>
-              <p className="font-semibold">${order.totalPrice.toFixed(2)}</p>
+              <p className="font-semibold">${order.TotalPrice.toFixed(2)}</p>
             </div>
           ))}
         </div>

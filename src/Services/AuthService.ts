@@ -9,9 +9,15 @@ import api from "./api";
 const BASE_URL: string = `${import.meta.env.VITE_API_URL}/api/Auth`;
 
 export const authService = {
-  async register(req: UserRegisterDTO): Promise<string> {
-    const request = await axios.post(`${BASE_URL}/register`, req);
-    return request.data;
+  async register(req: UserRegisterDTO): Promise<{ userName: string }> {
+    try {
+      const request = await axios.post(`${BASE_URL}/register`, req);
+      console.log("Axios post sonrası", request.data);
+      return request.data;
+    } catch (err) {
+      console.log("Axios hatası", err);
+      throw err;
+    }
   },
   async login(req: UserLoginDTO): Promise<TokenResponseDTO> {
     const request = await api.post<TokenResponseDTO>(`${BASE_URL}/login`, req);

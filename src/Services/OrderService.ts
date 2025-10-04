@@ -8,9 +8,9 @@ const BASE_URL: string = `${import.meta.env.VITE_API_URL}/api`;
 export const OrderService = {
   userGetAllOrder: async (): Promise<OrderReadDTO[]> => {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-    const res = await axios.get(`${BASE_URL}/user-getall-orders`, {
+    const res = await axios.get(`${BASE_URL}/order/user-getall-orders`, {
       headers: {
-        Authorize: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return res.data;
@@ -20,16 +20,22 @@ export const OrderService = {
     return res.data;
   },
   createOrder: async (order: OrderCreateDTO): Promise<OrderReadDTO> => {
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     const response = await axios.post<OrderReadDTO>(
-      `${BASE_URL}/create_order`,
-      order
+      `${BASE_URL}/order/create-order`,
+      order,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     return response.data;
   },
   updateOrderStatus: async (id: number, status: string): Promise<void> => {
     await axios.patch(`${BASE_URL}/${id}/status?status=${status}`);
   },
-   deleteOrder: async (id: number): Promise<void> => {
+  deleteOrder: async (id: number): Promise<void> => {
     await axios.delete(`${BASE_URL}/${id}`);
-  }
+  },
 };

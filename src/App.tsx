@@ -13,7 +13,14 @@ import Profile from "./Pages/Profile";
 import { PrivateRoute } from "./Components/PrivateRoute";
 import Checkout from "./Pages/Checkout";
 import ConfirmEmail from "./Pages/ConfirmEmail";
+import { useAuth } from "./Context/AuthContext";
+import { useEffect } from "react";
 function App() {
+  const { checkAuth } = useAuth();
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
   return (
     <>
       <CartProvider>
