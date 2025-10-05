@@ -9,6 +9,8 @@ const ConfirmEmail = () => {
     const token = searchParams.get("token");
     const email = searchParams.get("email");
 
+    console.log(token, email)
+
     if (token && email) {
       fetch(
         `https://asp-net-web-api-ym61.onrender.com/api/auth/confirm-email?email=${email}&token=${encodeURIComponent(

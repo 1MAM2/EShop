@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import type { UserRegisterDTO } from "../types/UserTypes/UserRegisterDTO";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Components/Loading";
+import axios from "axios";
 const Account = () => {
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -80,6 +81,15 @@ const Account = () => {
       toast.error("An error occurred during registration");
     }
   };
+  const handleTest = async () => {
+    await axios.post("https://asp-net-web-api-ym61.onrender.com/api/auth/register", {
+      UserName: "Selim",
+      Email: "smetindogan@gmail.com",
+      Password: "mahmut123",
+      Role: "Customer",
+      address: "İstanbul",
+    });
+  };
   return (
     <div className="h-[70vh] flex items-center justify-center">
       <div>
@@ -88,6 +98,14 @@ const Account = () => {
         ) : isHaveAnAccount ? (
           <div>
             <div className="login bg-blue-900 m-4 p-4 rounded-4xl max-w-sm w-full text-white">
+              <div className="LocalDeneme">
+                <button
+                  className="bg-blue-900 m-4 p-4 rounded-4xl max-w-sm w-full text-white"
+                  onClick={handleTest}
+                >
+                  Local TEst login
+                </button>
+              </div>
               <h2 className="text-center text-4xl">Login</h2>
               <form
                 action=""
