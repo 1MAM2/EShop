@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { OrderService } from "../Services/OrderService";
 import type { OrderCreateDTO } from "../types/OrderTypes/OrderCreateDTO";
+import { SignalRService } from "../Services/SignalRService";
 
 const Checkout = () => {
   const [formData, setFormData] = useState({
@@ -19,20 +20,20 @@ const Checkout = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const { cartItems,clearCart } = useCart();
+  const { cartItems, clearCart } = useCart();
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.Price * item.Quantity,
     0
   );
   const navigate = useNavigate();
+  const [html, setHtml] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // Buraya ödeme veya sipariş işlemi eklenebilir
   };
-  const CreateOrder = () => {
-    
+  const CreateOrder = async () => {
     const { fullName, email, address, city, zip, cardNumber, expiry, cvv } =
       formData;
     if (!fullName) return toast.error("Full name is required");
@@ -47,21 +48,52 @@ const Checkout = () => {
 
     toast.success("Success! Your payment has been received.");
     const newOrder: OrderCreateDTO = {
-      TotalPrice: cartItems.reduce((sum, item) => sum + item.Price * item.Quantity, 0),
-      orderItems: cartItems.map(item => ({
+      TotalPrice: cartItems.reduce(
+        (sum, item) => sum + item.Price * item.Quantity,
+        0
+      ),
+      orderItems: cartItems.map((item) => ({
         productId: +item.ProductId,
         quantity: item.Quantity,
-        unitPrice: item.Price
+        unitPrice: item.Price,
       })),
-      OrderStatus: "Pending"
+      OrderStatus: "Pending",
+      FullName: fullName,
+      Email: email,
+      Address: address,
+      City: city,
+      ZipCode: zip,
     };
-    OrderService.createOrder(newOrder);
+    try {
+      const createdOrder = await OrderService.createOrder(newOrder);
+      const paymentResponse = await fetch(
+        `http://localhost:5039/PaymentContoller/pay`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ TransactionId: createdOrder.OrderId }),
+        }
+      );
+      const data = await paymentResponse.json();
+      SignalRService.registerTransacrionId(data.ConversationId);
+      const blob = new Blob([data.Content], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      setHtml(url);
+    } catch (error) {}
     clearCart();
     navigate("/");
   };
 
   return (
     <div className="flex flex-col lg:flex-row justify-center gap-6 p-6 min-h-screen bg-gray-50">
+      {html && (
+        <iframe
+          src={html}
+          width={500}
+          height={500}
+          style={{ border: "none" }}
+        />
+      )}
       {/* Sol taraf - Form */}
       <form
         onSubmit={handleSubmit}

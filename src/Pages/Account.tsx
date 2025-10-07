@@ -33,7 +33,7 @@ const Account = () => {
         toast.success("Welcome back!!!!");
         return navigate("/");
       }
-    } catch (error) {
+    } catch (err) {
       toast.error("Password or UserName wrong!!!!!");
       setLoading(false);
     } finally {
@@ -65,9 +65,7 @@ const Account = () => {
         Email: email,
         Address: address,
       };
-      const res = await register(req);
-
-      console.log("Register bitti", res);
+       await register(req);
 
       toast.success("Your account has been successfully created!");
       navigate("/");
@@ -82,7 +80,7 @@ const Account = () => {
     }
   };
   const handleTest = async () => {
-    await axios.post("https://asp-net-web-api-ym61.onrender.com/api/auth/register", {
+    await axios.post("http://localhost:5039/api/auth/register", {
       UserName: "Selim",
       Email: "smetindogan@gmail.com",
       Password: "mahmut123",
