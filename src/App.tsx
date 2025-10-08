@@ -12,10 +12,11 @@ import { ToastContainer } from "react-toastify";
 import Profile from "./Pages/Profile";
 import { PrivateRoute } from "./Components/PrivateRoute";
 import Checkout from "./Pages/Checkout";
-import ConfirmEmail from "./Pages/ConfirmEmail";
+
 import { useAuth } from "./Context/AuthContext";
 import { useEffect } from "react";
 import Payment from "./Pages/Payment";
+import VerifyEmail from "./Pages/VerifyEmail";
 function App() {
   const { checkAuth } = useAuth();
 
@@ -32,7 +33,7 @@ function App() {
             <Route path={"/account"} element={<Account />} />
             <Route path={"/cart"} element={<Cart />} />
             <Route path="/browse" element={<Shop />} />
-            <Route path="/confirm-email" element={<ConfirmEmail />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
             <Route
               path="/profile"

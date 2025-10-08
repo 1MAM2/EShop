@@ -66,22 +66,33 @@ const Checkout = () => {
     };
     try {
       const createdOrder = await OrderService.createOrder(newOrder);
-      const paymentResponse = await fetch(
-        `http://localhost:5039/PaymentContoller/pay`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ TransactionId: createdOrder.OrderId }),
-        }
-      );
-      const data = await paymentResponse.json();
+      
+      const TransactionId = createdOrder.OrderId;
+      console.log(TransactionId);
+      const res = await fetch(`http://localhost:5039/PaymentContoller/pay`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          TransactionId: TransactionId,
+          Price: createdOrder.TotalPrice,
+        }),
+      });
+      console.log(createdOrder);
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error("Sunucu hatası: " + text);
+      }
+      const data = await res.json();
+      console.log("Gelen veri:", data);
       SignalRService.registerTransacrionId(data.ConversationId);
+
       const blob = new Blob([data.Content], { type: "text/html" });
       const url = URL.createObjectURL(blob);
       setHtml(url);
+      clearCart();
+      navigate("/");
     } catch (error) {}
-    clearCart();
-    navigate("/");
   };
 
   return (
