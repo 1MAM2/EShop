@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const VerifyEmail = () => {
   const [message, setMessage] = useState("E-posta doğrulanıyor...");
-
+  const navigate = useNavigate();
   const { token } = useParams();
-  console.log(token);
 
   useEffect(() => {
     if (!token) {
@@ -24,11 +23,10 @@ const VerifyEmail = () => {
           setMessage(`Doğrulama başarısız: ${errText}`);
           return;
         }
-
         const data = await res.text();
+        navigate("/email-verified-success")
         setMessage("E-posta başarıyla doğrulandı!");
         console.log(data);
-        
       } catch (error) {
         setMessage("Sunucuya bağlanırken hata oluştu.");
         console.error(error);
