@@ -22,11 +22,10 @@ const Payment = () => {
       let data;
       const text = await res.text(); // gelen yanıtın ne olduğunu öğren
       try {
-        console.log(text);
+        console.log("Ham yanıt:", text);
         data = JSON.parse(text);
-        
-      } catch {
-        
+      } catch (err) {
+        console.error("JSON parse edilemedi, gelen veri:", text);
         throw new Error("Beklenmeyen yanıt formatı");
       }
       SignalRService.registerTransacrionId(data.ConversationId);
