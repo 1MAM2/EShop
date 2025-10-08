@@ -5,29 +5,37 @@ const VerifyEmail = () => {
   const [message, setMessage] = useState("E-posta doğrulanıyor...");
 
   const { token } = useParams();
+  console.log(token);
+
   useEffect(() => {
     if (!token) {
-      setMessage("Geçersiz bağlantı!");
+      setMessage("Token bulunamadı.");
       return;
     }
 
-    fetch(
-      `https://asp-net-web-api-ym61.onrender.com/api/auth/verify-email/${token}`,
-      {
-        method: "GET",
-      }
-    )
-      .then(async (res) => {
-        if (res.ok) {
-          setMessage("E-posta başarıyla doğrulandı!");
-        } else {
-          const err = await res.text();
-          setMessage("Doğrulama başarısız: " + err);
+    const verifyEmail = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5039/api/Auth/verify-email?token=${token}`
+        );
+
+        if (!res.ok) {
+          const errText = await res.text();
+          setMessage(`Doğrulama başarısız: ${errText}`);
+          return;
         }
-      })
-      .catch(() => {
-        setMessage("Sunucuya ulaşılamadı!");
-      });
+
+        const data = await res.text();
+        setMessage("E-posta başarıyla doğrulandı!");
+        console.log(data);
+        
+      } catch (error) {
+        setMessage("Sunucuya bağlanırken hata oluştu.");
+        console.error(error);
+      }
+    };
+
+    verifyEmail();
   }, []);
 
   return (

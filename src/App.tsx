@@ -17,6 +17,7 @@ import { useAuth } from "./Context/AuthContext";
 import { useEffect } from "react";
 import Payment from "./Pages/Payment";
 import VerifyEmail from "./Pages/VerifyEmail";
+import EmailVerifiedSuccess from "./Pages/EmailVerifiedSuccess";
 function App() {
   const { checkAuth } = useAuth();
 
@@ -43,6 +44,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route path="/email-verified-success" element={<EmailVerifiedSuccess />} />
             <Route path="/payment" element={<Payment />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/checkout" element={<Checkout />} />
