@@ -64,7 +64,7 @@ const Account = () => {
         Email: email,
         Address: address,
       };
-       await register(req);
+      await register(req);
 
       toast.success("Your account has been successfully created!");
       navigate("/");
@@ -78,7 +78,7 @@ const Account = () => {
       toast.error("An error occurred during registration");
     }
   };
-  
+
   return (
     <div className="h-[70vh] flex items-center justify-center">
       <div>
@@ -144,95 +144,99 @@ const Account = () => {
           </div>
         ) : (
           <div>
-            <div className="register bg-blue-900 m-4 p-4 rounded-4xl max-w-sm w-full text-white">
-              <h2 className="text-center text-4xl">Register</h2>
-              <form
-                action=""
-                method="post"
-                className=""
-                onSubmit={handleRegister}
-              >
-                <div className="flex justify-center items-center flex-col">
-                  <div className="my-4">
-                    <label
-                      htmlFor="userName"
-                      className="block w-full text-xl my-2"
-                    >
-                      User name:
-                    </label>
-                    <input
-                      value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
-                      id="userName"
-                      className="block w-full text-xl border-2 p-3 rounded-2xl border-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-800 focus:outline-none"
-                      type="text"
-                      placeholder="User name"
-                    />
-                  </div>
-                  <div className="my-4">
-                    <label
-                      htmlFor="email"
-                      className="block w-full text-xl my-2"
-                    >
-                      Email:
-                    </label>
-                    <input
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      id="email"
-                      className="block w-full text-xl border-2 p-3 rounded-2xl border-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-800 focus:outline-none"
-                      type="text"
-                      placeholder="Email"
-                    />
-                  </div>
-                  <div className="my-4">
-                    <label
-                      htmlFor="address"
-                      className="block w-full text-xl my-2"
-                    >
-                      Address:
-                    </label>
-                    <input
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      id="address"
-                      className="block w-full text-xl border-2 p-3 rounded-2xl border-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-800 focus:outline-none"
-                      type="text"
-                      placeholder="address"
-                    />
-                  </div>
-                  <div className="my-4">
-                    <label
-                      htmlFor="password"
-                      className="block w-full text-xl my-2"
-                    >
-                      Password:
-                    </label>
-                    <input
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      id="password"
-                      className="block w-full text-xl border-2 p-3 rounded-2xl border-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-800 focus:outline-none"
-                      type="password"
-                      placeholder="Password"
-                    />
-                  </div>
+            {loading ? (
+              <Loading />
+            ) : (
+              <div className="register bg-blue-900 m-4 p-4 rounded-4xl max-w-sm w-full text-white">
+                <h2 className="text-center text-4xl">Register</h2>
+                <form
+                  action=""
+                  method="post"
+                  className=""
+                  onSubmit={handleRegister}
+                >
+                  <div className="flex justify-center items-center flex-col">
+                    <div className="my-4">
+                      <label
+                        htmlFor="userName"
+                        className="block w-full text-xl my-2"
+                      >
+                        User name:
+                      </label>
+                      <input
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        id="userName"
+                        className="block w-full text-xl border-2 p-3 rounded-2xl border-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-800 focus:outline-none"
+                        type="text"
+                        placeholder="User name"
+                      />
+                    </div>
+                    <div className="my-4">
+                      <label
+                        htmlFor="email"
+                        className="block w-full text-xl my-2"
+                      >
+                        Email:
+                      </label>
+                      <input
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        id="email"
+                        className="block w-full text-xl border-2 p-3 rounded-2xl border-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-800 focus:outline-none"
+                        type="text"
+                        placeholder="Email"
+                      />
+                    </div>
+                    <div className="my-4">
+                      <label
+                        htmlFor="address"
+                        className="block w-full text-xl my-2"
+                      >
+                        Address:
+                      </label>
+                      <input
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        id="address"
+                        className="block w-full text-xl border-2 p-3 rounded-2xl border-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-800 focus:outline-none"
+                        type="text"
+                        placeholder="address"
+                      />
+                    </div>
+                    <div className="my-4">
+                      <label
+                        htmlFor="password"
+                        className="block w-full text-xl my-2"
+                      >
+                        Password:
+                      </label>
+                      <input
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        id="password"
+                        className="block w-full text-xl border-2 p-3 rounded-2xl border-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-800 focus:outline-none"
+                        type="password"
+                        placeholder="Password"
+                      />
+                    </div>
 
-                  <div className="flex items-center justify-between gap-4">
-                    <button className="w-36 p-2 my-4 bg-cyan-500 rounded-xl hover:bg-cyan-600 active:bg-cyan-700 transition">
-                      Register
-                    </button>
+                    <div className="flex items-center justify-between gap-4">
+                      <button className="w-36 p-2 my-4 bg-cyan-500 rounded-xl hover:bg-cyan-600 active:bg-cyan-700 transition">
+                        Register
+                      </button>
 
-                    <button
-                      onClick={() => setIsHaveAnAccount(true)}
-                      className="w-36 p-2 my-4 bg-cyan-500 rounded-xl hover:bg-cyan-600 active:bg-cyan-700 transition"
-                    >
-                      Login
-                    </button>
+                      <button
+                        onClick={() => setIsHaveAnAccount(true)}
+                        className="w-36 p-2 my-4 bg-cyan-500 rounded-xl hover:bg-cyan-600 active:bg-cyan-700 transition"
+                      >
+                        Login
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </form>
-            </div>
+                </form>
+              </div>
+            )}
           </div>
         )}
       </div>

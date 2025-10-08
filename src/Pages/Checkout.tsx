@@ -25,7 +25,6 @@ const Checkout = () => {
     0
   );
   const navigate = useNavigate();
-  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +44,9 @@ const Checkout = () => {
     if (!expiry) return toast.error("Expiry date is required");
     if (!cvv) return toast.error("CVV date is required");
 
-    toast.success("Success! Your payment has been received.");
+    toast.info(
+      "You’re being redirected for payment verification. Please wait..."
+    );
     const newOrder: OrderCreateDTO = {
       TotalPrice: cartItems.reduce(
         (sum, item) => sum + item.Price * item.Quantity,
@@ -65,7 +66,7 @@ const Checkout = () => {
     };
     try {
       const createdOrder = await OrderService.createOrder(newOrder);
-      
+
       const TransactionId = createdOrder.OrderId;
       console.log(createdOrder);
       navigate(`/payment/${TransactionId}`);
