@@ -23,8 +23,10 @@ const Payment = () => {
       const text = await res.text(); // gelen yanıtın ne olduğunu öğren
       try {
         data = JSON.parse(text);
+        console.log(data);
+        
       } catch {
-        console.warn("Response JSON değil:", text);
+        
         throw new Error("Beklenmeyen yanıt formatı");
       }
       SignalRService.registerTransacrionId(data.ConversationId);
