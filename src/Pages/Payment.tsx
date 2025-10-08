@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SignalRService } from "../Services/SignalRService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../Components/Loading";
 
 const Payment = () => {
@@ -8,6 +8,7 @@ const Payment = () => {
   const [isPaymentSuccess, setIsPaymentSuccess] = useState<boolean>(false);
   const { transactionId } = useParams();
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const pay = async () => {
     try {
@@ -18,13 +19,14 @@ const Payment = () => {
           method: "POST",
         }
       );
-      if (!res.ok) {
-        const text = await res.text();
-        setLoading(false);
-        throw new Error("Sunucu hatası: " + text);
+      let data;
+      const text = await res.text(); // gelen yanıtın ne olduğunu öğren
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.warn("Response JSON değil:", text);
+        throw new Error("Beklenmeyen yanıt formatı");
       }
-      const data = await res.json();
-      console.log("Gelen veri:", data);
       SignalRService.registerTransacrionId(data.ConversationId);
 
       const blob = new Blob([data.Content], { type: "text/html" });
@@ -61,7 +63,7 @@ const Payment = () => {
                   Your payment has been completed successfully.
                 </p>
                 <button
-                  onClick={() => (window.location.href = "/")}
+                  onClick={() => navigate("/")}
                   className="px-6 py-3 bg-cyan-600 text-white rounded-lg shadow-md hover:bg-cyan-700 transition text-2xl"
                 >
                   Go to Homepage
@@ -71,11 +73,8 @@ const Payment = () => {
               <div className="flex justify-center items-center min-h-screen bg-gray-100">
                 <iframe
                   src={html}
-                  width={500}
-                  height={500}
                   title="3D Secure"
-                  className="rounded-xl shadow-lg border border-gray-300"
-                  style={{ maxWidth: "90%", maxHeight: "90%" }}
+                  className="w-[90vw] h-[80vh] max-w-lg rounded-xl shadow-lg border border-gray-300"
                 ></iframe>
               </div>
             )}
