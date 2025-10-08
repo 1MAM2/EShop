@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const VerifyEmail = () => {
   const [message, setMessage] = useState("E-posta doğrulanıyor...");
   const navigate = useNavigate();
-  const { token } = useParams();
+  const { token } = useParams<{ token: string }>();
 
   useEffect(() => {
     if (!token) {
@@ -14,9 +14,7 @@ const VerifyEmail = () => {
 
     const verifyEmail = async () => {
       try {
-        const res = await fetch(
-          `https://asp-net-web-api-ym61.onrender.com/api/Auth/verify-email?token=${token}`
-        );
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/Auth/verify-email?token=${token}`);
 
         if (!res.ok) {
           const errText = await res.text();

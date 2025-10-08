@@ -10,7 +10,7 @@ const Payment = () => {
   const pay = async () => {
     try {
       const res = await fetch(
-        `https://asp-net-web-api-ym61.onrender.com/api/Payment/pay/${transactionId}`,
+        `${import.meta.env.VITE_API_URL}/api/Payment/pay/${transactionId}`,
         {
           method: "POST",
         }
