@@ -5,7 +5,6 @@ import "react-toastify/dist/ReactToastify.css";
 import type { UserRegisterDTO } from "../types/UserTypes/UserRegisterDTO";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Components/Loading";
-import axios from "axios";
 const Account = () => {
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
