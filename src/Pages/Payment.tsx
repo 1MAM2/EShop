@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import { SignalRService } from "../Services/SignalRService";
+import { useParams } from "react-router-dom";
 
 const Payment = () => {
   const [html, setHtml] = useState<string>("");
   const [isPaymentSuccess, setIsPaymentSuccess] = useState<boolean>(false);
-  const success = "Payment success";
+  const { transactionId } = useParams();
 
   const pay = async () => {
     try {
-      const res = await fetch("http://localhost:5039/PaymentContoller/pay");
+      const res = await fetch(
+        `http://localhost:5039/api/Payment/pay/${transactionId}`,
+        {
+          method: "POST",
+        }
+      );
       if (!res.ok) {
         const text = await res.text();
         throw new Error("Sunucu hatası: " + text);
@@ -30,34 +36,42 @@ const Payment = () => {
       console.log("SignalR'dan gelen:", res);
       setIsPaymentSuccess(res); // Backend "Receive" metoduyla ne gönderirse
     });
-  }, []);
-
-  // const blob = new Blob([res.Content],{type:"text/html"});
-  // const obj = URL.createObjectURL(blob)
-  // console.log("obje",obj,"blooob",blob);
-
-  // setHtml(obj);
+    pay();
+  }, [transactionId]);
 
   return (
     <div className="text-center">
       {html && (
         <div>
           {isPaymentSuccess ? (
-            <h1>{success}</h1>
+            <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
+              <h1 className="text-4xl md:text-6xl font-bold text-green-600 drop-shadow-lg mb-4">
+                Payment Successful!
+              </h1>
+              <p className="text-lg md:text-xl text-gray-700 mb-6">
+                Your payment has been completed successfully.
+              </p>
+              <button
+                onClick={() => (window.location.href = "/")}
+                className="px-6 py-3 bg-cyan-600 text-white rounded-lg shadow-md hover:bg-cyan-700 transition text-2xl"
+              >
+                Go to Homepage
+              </button>
+            </div>
           ) : (
-            <iframe
-              src={html}
-              width={500}
-              height={500}
-              title="3D Secure"
-              style={{ border: "none" }}
-            ></iframe>
+            <div className="flex justify-center items-center min-h-screen bg-gray-100">
+              <iframe
+                src={html}
+                width={500}
+                height={500}
+                title="3D Secure"
+                className="rounded-xl shadow-lg border border-gray-300"
+                style={{ maxWidth: "90%", maxHeight: "90%" }}
+              ></iframe>
+            </div>
           )}
         </div>
       )}
-      <button onClick={pay} className="w-7xl text-2xl text-white bg-blue-950">
-        Pay
-      </button>
     </div>
   );
 };

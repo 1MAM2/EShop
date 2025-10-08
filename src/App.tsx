@@ -45,7 +45,7 @@ function App() {
               }
             />
             <Route path="/email-verified-success" element={<EmailVerifiedSuccess />} />
-            <Route path="/payment" element={<Payment />} />
+            <Route path="/payment/:transactionId" element={<Payment />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/checkout" element={<Checkout />} />
           </Routes>

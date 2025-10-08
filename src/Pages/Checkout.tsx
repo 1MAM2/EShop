@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { OrderService } from "../Services/OrderService";
 import type { OrderCreateDTO } from "../types/OrderTypes/OrderCreateDTO";
-import { SignalRService } from "../Services/SignalRService";
 
 const Checkout = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +25,7 @@ const Checkout = () => {
     0
   );
   const navigate = useNavigate();
-  const [html, setHtml] = useState<string>("");
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,44 +67,14 @@ const Checkout = () => {
       const createdOrder = await OrderService.createOrder(newOrder);
       
       const TransactionId = createdOrder.OrderId;
-      console.log(TransactionId);
-      const res = await fetch(`http://localhost:5039/PaymentContoller/pay`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          TransactionId: TransactionId,
-          Price: createdOrder.TotalPrice,
-        }),
-      });
       console.log(createdOrder);
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error("Sunucu hatası: " + text);
-      }
-      const data = await res.json();
-      console.log("Gelen veri:", data);
-      SignalRService.registerTransacrionId(data.ConversationId);
-
-      const blob = new Blob([data.Content], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      setHtml(url);
+      navigate(`/payment/${TransactionId}`);
       clearCart();
-      navigate("/");
     } catch (error) {}
   };
 
   return (
     <div className="flex flex-col lg:flex-row justify-center gap-6 p-6 min-h-screen bg-gray-50">
-      {html && (
-        <iframe
-          src={html}
-          width={500}
-          height={500}
-          style={{ border: "none" }}
-        />
-      )}
-      {/* Sol taraf - Form */}
       <form
         onSubmit={handleSubmit}
         className="flex-1 bg-white shadow-lg rounded-2xl p-8 space-y-6"
