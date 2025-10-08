@@ -22,8 +22,8 @@ const Payment = () => {
       let data;
       const text = await res.text(); // gelen yanıtın ne olduğunu öğren
       try {
+        console.log(text);
         data = JSON.parse(text);
-        console.log(data);
         
       } catch {
         
