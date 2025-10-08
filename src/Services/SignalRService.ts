@@ -4,7 +4,7 @@ let hubConnection: signalR.HubConnection | any;
 export const SignalRService = {
   async startConnection() {
     hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5039/pay-hub")
+      .withUrl("https://asp-net-web-api-ym61.onrender.com/pay-hub")
       .build();
     hubConnection
       .start()

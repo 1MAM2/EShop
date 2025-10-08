@@ -79,15 +79,7 @@ const Account = () => {
       toast.error("An error occurred during registration");
     }
   };
-  const handleTest = async () => {
-    await axios.post("http://localhost:5039/api/auth/register", {
-      UserName: "Selim",
-      Email: "smetindogan@gmail.com",
-      Password: "mahmut123",
-      Role: "Customer",
-      address: "İstanbul",
-    });
-  };
+  
   return (
     <div className="h-[70vh] flex items-center justify-center">
       <div>
@@ -96,14 +88,6 @@ const Account = () => {
         ) : isHaveAnAccount ? (
           <div>
             <div className="login bg-blue-900 m-4 p-4 rounded-4xl max-w-sm w-full text-white">
-              <div className="LocalDeneme">
-                <button
-                  className="bg-blue-900 m-4 p-4 rounded-4xl max-w-sm w-full text-white"
-                  onClick={handleTest}
-                >
-                  Local TEst login
-                </button>
-              </div>
               <h2 className="text-center text-4xl">Login</h2>
               <form
                 action=""

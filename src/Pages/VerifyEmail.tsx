@@ -15,7 +15,7 @@ const VerifyEmail = () => {
     const verifyEmail = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5039/api/Auth/verify-email?token=${token}`
+          `https://asp-net-web-api-ym61.onrender.com/api/Auth/verify-email?token=${token}`
         );
 
         if (!res.ok) {

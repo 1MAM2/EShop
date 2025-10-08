@@ -10,7 +10,7 @@ const Payment = () => {
   const pay = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5039/api/Payment/pay/${transactionId}`,
+        `https://asp-net-web-api-ym61.onrender.com/api/Payment/pay/${transactionId}`,
         {
           method: "POST",
         }
