@@ -53,7 +53,8 @@ console.log(users);
   if (loading) return <Loading />;
 
   function updateUserRole(Id: number, arg1: string) {
-    throw new Error("Function not implemented.");
+   console.log(Id,arg1);
+   
   }
 
   return (

@@ -8,7 +8,6 @@ import type { CategoryUpdateDTO } from "../types/CategoryTypes/CategoryUpdateDTO
 import type { OrderReadDTO } from "../types/OrderTypes/OrderReadDTO";
 import { ACCESS_TOKEN_KEY } from "../Context/AuthContext";
 import type { UserReadDTO } from "../types/UserTypes/UserReadDTO";
-import type { UserUpdateDTO } from "../types/UserTypes/UserUpdateDTO";
 
 // const api = axios.create({
 //   baseURL: import.meta.env.VITE_API_URL,
