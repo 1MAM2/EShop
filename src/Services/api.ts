@@ -1,99 +1,92 @@
-import axios, {
-  AxiosError,
-  type InternalAxiosRequestConfig,
-  type AxiosResponse,
-} from "axios";
+import axios, { AxiosError } from "axios";
 
-const ACCESS_TOKEN_KEY = "accessToken";
-const REFRESH_TOKEN_KEY = "refreshToken";
+declare module "axios" {
+  export interface InternalAxiosRequestConfig {
+    _retry?: boolean;
+  }
+}
+const API_URL = "https://asp-net-web-api-ym61.onrender.com";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: API_URL,
+  withCredentials: true, // refresh cookie veya token varsa önemli
 });
+
+// İlk isteklerde access token ekleniyor
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 let isRefreshing = false;
-let refreshQueue: {
-  resolve: (token: string) => void;
-  reject: (err: any) => void;
-}[] = [];
+let failedQueue: any[] = [];
 
 const processQueue = (error: any, token: string | null = null) => {
-  refreshQueue.forEach((p) => {
-    if (error) p.reject(error);
-    else if (token) p.resolve(token);
+  failedQueue.forEach((prom) => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
   });
-  refreshQueue = [];
+  failedQueue = [];
 };
 
-// Request Interceptor  Token ekleme
-api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Response Interceptor  401 olduğunda refresh deneme
 api.interceptors.response.use(
-  (res: AxiosResponse) => res,
-  async (err: AxiosError) => {
-    const originalReq = err.config as InternalAxiosRequestConfig & {
-      _retry?: boolean;
-    };
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config!;
 
-    if (err.response?.status === 401 && !originalReq._retry) {
-     
-
+    // Access token expired ise
+    if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
-          refreshQueue.push({ resolve, reject });
-        }).then((token) => {
-          if (originalReq.headers) {
-            originalReq.headers.Authorization = `Bearer ${token}`;
-          }
-          return api(originalReq);
-        });
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return api(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
       }
 
-      originalReq._retry = true;
+      originalRequest._retry = true;
       isRefreshing = true;
-      
 
       try {
-        const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-        const resp = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/auth/refresh-token`,
-          {
-            refreshToken,
-          }
-        );
+        const refreshToken = localStorage.getItem("refreshToken");
 
-        const { accessToken, refreshToken: newRefresh } = resp.data;
-        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-        localStorage.setItem(REFRESH_TOKEN_KEY, newRefresh);
+        if (!refreshToken) throw new Error("No refresh token found");
+
+        // Backend’in refresh endpoint’i body bekliyorsa:
+        const response = await axios.post(`${API_URL}/api/Auth/refresh-token`, {
+          refreshToken,
+        });
+
+        const { accessToken, refreshToken: newRefresh } = response.data;
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", newRefresh);
+
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-        
-
         processQueue(null, accessToken);
 
-        if (originalReq.headers) {
-          originalReq.headers.Authorization = `Bearer ${accessToken}`;
-        }
-        return api(originalReq);
-      } catch (refreshError) {
-        processQueue(refreshError, null);
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
-        localStorage.removeItem(REFRESH_TOKEN_KEY);
+        return api(originalRequest);
+      } catch (err) {
+        processQueue(err, null);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         window.location.href = "/account";
-        return Promise.reject(refreshError);
+        return Promise.reject(err);
       } finally {
         isRefreshing = false;
       }
     }
-    
 
-    return Promise.reject(err);
+    return Promise.reject(error);
   }
 );
 

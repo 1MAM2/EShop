@@ -1,6 +1,8 @@
 export interface OrderItemReadDTO {
-  productId: number;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
+  ProductId: number;
+  Quantity: number;
+  UnitPrice: number;
+  TotalPrice: number;
+  ImgUrl:string;
+  ProductName:string
 }

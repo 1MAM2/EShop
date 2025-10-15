@@ -56,6 +56,8 @@ const Checkout = () => {
         productId: +item.ProductId,
         quantity: item.Quantity,
         unitPrice: item.Price,
+        imgUrl:item.ImgUrl,
+        productName:item.ProductName
       })),
       OrderStatus: "Pending",
       FullName: fullName,

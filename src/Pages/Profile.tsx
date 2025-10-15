@@ -192,7 +192,7 @@ const Profile = () => {
             >
               <div>
                 <p className="font-medium">
-                  Order #{order.userId}-{order.CreatedAt}
+                  Order #{order.UserId}-{order.CreatedAt}
                 </p>
                 <p className="text-gray-500 text-sm">
                   Placed on{" "}

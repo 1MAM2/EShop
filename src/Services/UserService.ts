@@ -1,24 +1,20 @@
-import axios from "axios";
 import type { UserReadDTO } from "../types/UserTypes/UserReadDTO";
 import { ACCESS_TOKEN_KEY } from "../Context/AuthContext";
 import type { UserUpdateDTO } from "../types/UserTypes/UserUpdateDTO";
+import api from "./api";
 
-const BASE_URL: string = `${import.meta.env.VITE_API_URL}/api/user`;
+
 
 export const UserService = {
   async getUserData(): Promise<UserReadDTO> {
-    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-    const res = await axios.get(`${BASE_URL}/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await api.get("/api/user/me");
     return res.data;
   },
+
   async deleteAccount(): Promise<void> {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
 
-     await axios.delete(`${BASE_URL}/deleteAccount`,{
+     await api.delete(`api/user/deleteAccount`,{
         headers:{
            Authorization: `Bearer ${token}`, 
         }
@@ -28,7 +24,7 @@ export const UserService = {
   async updateUser(req:UserUpdateDTO):Promise<void>
   {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-    await axios.put(`${BASE_URL}/updateuser`,req,{
+    await api.put(`api/user/updateuser`,req,{
       headers:
       {
         Authorization: `Bearer ${token}`

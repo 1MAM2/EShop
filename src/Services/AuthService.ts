@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { UserRegisterDTO } from "../types/UserTypes/UserRegisterDTO";
 import type { UserLoginDTO } from "../types/UserTypes/UserLoginDTO";
 import type { TokenResponseDTO } from "../types/UserTypes/TokenResponseDTO";
@@ -6,12 +5,10 @@ import type { RefreshTokenRequestDTO } from "../types/UserTypes/RefreshTokenRequ
 import { ACCESS_TOKEN_KEY } from "../Context/AuthContext";
 import api from "./api";
 
-const BASE_URL: string = `${import.meta.env.VITE_API_URL}/api/Auth`;
-
 export const authService = {
   async register(req: UserRegisterDTO): Promise<{ userName: string }> {
     try {
-      const request = await axios.post(`${BASE_URL}/register`, req);
+      const request = await api.post(`/api/Auth/register`, req);
       console.log("Axios post sonrası", request.data);
       return request.data;
     } catch (err) {
@@ -20,13 +17,13 @@ export const authService = {
     }
   },
   async login(req: UserLoginDTO): Promise<TokenResponseDTO> {
-    const request = await api.post<TokenResponseDTO>(`${BASE_URL}/login`, req);
+    const request = await api.post<TokenResponseDTO>(`/api/Auth/login`, req);
     return request.data;
   },
   async logout(): Promise<string> {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     const request = await api.post(
-      `${BASE_URL}/logout`,
+      `/api/Auth/logout`,
       {}, // body boş
       {
         headers: {
@@ -37,7 +34,7 @@ export const authService = {
     return request.data;
   },
   async refresh_Token(req: RefreshTokenRequestDTO): Promise<TokenResponseDTO> {
-    const request = await api.post(`${BASE_URL}/refresh-token`, req);
+    const request = await api.post(`/api/Auth/refresh-token`, req);
     return request.data;
   },
 };
