@@ -6,5 +6,6 @@ export type UserRegisterDTO = {
     Role:string,
     Email:string,
     Address:string,
+    PhoneNumber:string,
 
 }

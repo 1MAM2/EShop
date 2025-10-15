@@ -68,7 +68,7 @@ const OrderList = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-semibold mb-6">📦 Sipariş Listesi</h1>
+      <h1 className="text-2xl font-semibold mb-6">📦 Orders List</h1>
 
       <table className="min-w-full bg-white rounded-xl shadow-sm overflow-hidden">
         <thead className="bg-gray-100 text-left">

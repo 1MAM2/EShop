@@ -24,6 +24,7 @@ const CreateProduct = ({ onClose, onCreated }: CreateProductProps) => {
     useState<string>("");
   const [newProductDiscount, setNewProductDiscount] = useState<number>(0);
   const [newProductCategoryId, setNewProductCategoryId] = useState<number>(0);
+  const [newProductStock, setNewProductStock] = useState<number>(0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -94,6 +95,7 @@ const CreateProduct = ({ onClose, onCreated }: CreateProductProps) => {
         Description: newProductDescription,
         CategoryId: newProductCategoryId,
         Discount: newProductDiscount,
+        Stock: newProductStock,
       });
 
       toast.dismiss(); // loading mesajını kapat
@@ -110,6 +112,7 @@ const CreateProduct = ({ onClose, onCreated }: CreateProductProps) => {
       setGalleryUrls([]);
       setNewProductCategoryId(0);
       setNewProductDiscount(0);
+      setNewProductStock(0);
       setNewProductDescription("");
     } catch (error) {
       toast.dismiss();
@@ -149,6 +152,13 @@ const CreateProduct = ({ onClose, onCreated }: CreateProductProps) => {
           placeholder="Discount"
           value={newProductDiscount}
           onChange={(e) => setNewProductDiscount(parseFloat(e.target.value))}
+          className="w-full border px-3 py-2 rounded"
+        />
+        <input
+          type="number"
+          placeholder="Stock"
+          value={newProductStock}
+          onChange={(e) => setNewProductStock(parseInt(e.target.value))}
           className="w-full border px-3 py-2 rounded"
         />
         <select

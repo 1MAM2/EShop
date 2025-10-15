@@ -7,4 +7,5 @@ export interface ProductUpdateDTO {
   Discount: number;
   Description: string;
   GalleryImages: string[];
+  Stock:number;
 }

@@ -3,7 +3,7 @@ import type { ProductReadDTO } from "../../types/ProductTypes/PrdocutReadDTO";
 import { AdminService } from "../../Services/AdminService";
 import CreateProduct from "../Companents/CreateProduct";
 import { useNavigate } from "react-router-dom";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
 import Loading from "../../Components/Loading";
 import { usePagination } from "../../Custom Hooks/usePagination";
 
@@ -13,6 +13,10 @@ export default function AdminProducts() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+
+  // 🔹 Stok düzenleme durumları
+  const [editingStockId, setEditingStockId] = useState<number | null>(null);
+  const [newStock, setNewStock] = useState<number>(0);
 
   // 🟢 Fetch products
   useEffect(() => {
@@ -54,6 +58,26 @@ export default function AdminProducts() {
     }
   };
 
+  // 🔹 Stok düzenleme işlemleri
+  const handleStockEdit = (id: number, currentStock: number) => {
+    setEditingStockId(id);
+    setNewStock(currentStock);
+  };
+
+  const handleSaveStock = async (id: number) => {
+    try {
+      await AdminService.updateProductStock(id, newStock);
+      // products state'ini güncelle
+      setProducts((prev) =>
+        prev.map((p) => (p.Id === id ? { ...p, Stock: newStock } : p))
+      );
+      setEditingStockId(null);
+    } catch (err) {
+      console.error("Stock update error:", err);
+      alert("An error occurred while updating stock!");
+    }
+  };
+
   // 🔹 Arama
   const filteredProducts = products.filter((p) =>
     p.ProductName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -63,23 +87,6 @@ export default function AdminProducts() {
   const itemsPerPage = 5;
   const { currentPage, totalPages, currentData, goToPage, nextPage, prevPage } =
     usePagination(filteredProducts, itemsPerPage);
-
-  // const saveEdit = async (id: number, field: "ProductName" | "Price") => {
-  //   try {
-  //     const updatedProduct = { ...products.find((p) => p.Id === id)! };
-  //     if (field === "ProductName") updatedProduct.ProductName = editingValue;
-  //     else updatedProduct.Price = parseFloat(editingValue);
-
-  //     await AdminService.UpdateProduct(id, updatedProduct); // backend update fonksiyonu
-  //     setProducts((prev) =>
-  //       prev.map((p) => (p.Id === id ? updatedProduct : p))
-  //     );
-  //     setEditingId(null);
-  //   } catch (err) {
-  //     console.error("Update error:", err);
-  //     alert("An error occurred while updating!");
-  //   }
-  // };
 
   return (
     <div className="space-y-4">
@@ -111,6 +118,15 @@ export default function AdminProducts() {
                   Price
                 </th>
                 <th className="px-4 py-2 text-left text-xl font-medium text-gray-700">
+                  Discount
+                </th>
+                <th className="px-4 py-2 text-left text-xl font-medium text-gray-700">
+                  Final Price
+                </th>
+                <th className="px-4 py-2 text-left text-xl font-medium text-gray-700">
+                  Stock
+                </th>
+                <th className="px-4 py-2 text-left text-xl font-medium text-gray-700">
                   Image
                 </th>
                 <th className="px-4 py-2 text-center text-xl font-medium text-gray-700">
@@ -125,22 +141,64 @@ export default function AdminProducts() {
                   className="bg-white hover:bg-blue-50 hover:shadow-md transition-all duration-150 rounded-lg cursor-pointer"
                   onClick={() => handleProductClick(p.Id)}
                 >
-                  <td className="px-4 py-3 text-xl font-medium text-gray-700">
+                  <td className="px-4 py-3 font-medium text-gray-700">
                     {p.Id}
                   </td>
+                  <td className="px-4 py-3 text-gray-800 hover:text-blue-600">
+                    {p.ProductName}
+                  </td>
+                  <td className="px-4 py-3 text-gray-800 font-semibold">
+                    ₺{p.Price}
+                  </td>
                   <td className="px-4 py-3 text-xl text-gray-800">
-                    <span className="hover:text-blue-600">{p.ProductName}</span>
+                    {p.Discount * 100}%
+                  </td>
+                  <td className="px-4 py-3 text-xl text-gray-800 font-semibold">
+                    ₺{p.FinalPrice}
                   </td>
 
-                  {/* Inline edit Price */}
-                  <td className="px-4 py-3 text-xl text-gray-800">
-                    <span className="hover:text-blue-600 font-semibold">
-                      ₺{p.Price}
-                    </span>
+                  {/* 🔹 Stok düzenleme alanı */}
+                  <td className="px-4 py-3 text-gray-800">
+                    {editingStockId === p.Id ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          value={newStock}
+                          onChange={(e) => setNewStock(Number(e.target.value))}
+                          className="border p-1 w-20 rounded"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleSaveStock(p.Id);
+                          }}
+                          className="text-green-600 hover:text-green-800"
+                          title="Save"
+                        >
+                          <FaSave />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span>{p.Stock}</span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleStockEdit(p.Id, p.Stock);
+                          }}
+                          className="text-blue-600 hover:text-blue-800"
+                          title="Edit Stock"
+                        >
+                          <FaEdit />
+                        </button>
+                      </div>
+                    )}
                   </td>
 
                   <td
-                    className="px-4 py-3 text-xl"
+                    className="px-4 py-3"
                     onClick={() => handleProductClick(p.Id)}
                   >
                     <img
@@ -166,7 +224,6 @@ export default function AdminProducts() {
         </div>
       )}
 
-      {/* 🔹 Pagination */}
       <div className="flex justify-center gap-2 mt-4">
         <button
           onClick={prevPage}

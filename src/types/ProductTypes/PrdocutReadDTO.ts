@@ -11,4 +11,5 @@ export interface ProductReadDTO
     CreateTime:string;
     Description:string
     GalleryImages:string[]
+    Stock:number
 }

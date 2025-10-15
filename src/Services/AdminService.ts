@@ -6,8 +6,8 @@ import api from "./api";
 import type { CategoryCreateDTO } from "../types/CategoryTypes/CategoryCreateDTO";
 import type { CategoryUpdateDTO } from "../types/CategoryTypes/CategoryUpdateDTO";
 import type { OrderReadDTO } from "../types/OrderTypes/OrderReadDTO";
-import { ACCESS_TOKEN_KEY } from "../Context/AuthContext";
 import type { UserReadDTO } from "../types/UserTypes/UserReadDTO";
+import type { DashboardDTO } from "../types/DashBoard/DashboardDTO";
 
 // const api = axios.create({
 //   baseURL: import.meta.env.VITE_API_URL,
@@ -89,13 +89,24 @@ export const AdminService = {
     return res.data;
   },
 
-  async deleteAccount(): Promise<void> {
-    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-
-    await api.delete(`api/user/deleteAccount`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  async deleteAccount(id: number): Promise<void> {
+    await api.put(`${BaseUrl}/User/soft-delete/${id}`);
+  },
+  async changeRole(id: number, role: string): Promise<void> {
+    await api.put(`${BaseUrl}/User/change-role`, { id, role });
+  },
+  // DashBoard
+  async dashboard(): Promise<DashboardDTO> {
+    const res = await api.get(`${BaseUrl}/DashBoard`);
+    return res.data;
+  },
+  async updateProductStock(productId: number, newStock: number): Promise<void> {
+    await api.put(
+      `${BaseUrl}/Product/${productId}/stock`,
+      { newStock },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   },
 };

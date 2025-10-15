@@ -6,4 +6,5 @@ export interface ProductCreateDTO {
   Discount: number;
   Description: string;
   GalleryImages: string[];
+  Stock:number;
 }

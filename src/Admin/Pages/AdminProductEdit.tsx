@@ -2,12 +2,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
-import { uploadToCloudinary} from "../Utilits/uploadToClodinary";
+import { uploadToCloudinary } from "../Utilits/uploadToClodinary";
 import { uploadMultipleToCloudinary } from "../Utilits/uploadToCloudinaryMultipleFile";
 import Loading from "../../Components/Loading";
 import { AdminService } from "../../Services/AdminService";
 import type { ProductUpdateDTO } from "../../types/ProductTypes/ProductUpdateDTO";
-
 
 const AdminProductEdit = () => {
   const { id } = useParams();
@@ -23,6 +22,7 @@ const AdminProductEdit = () => {
   const [Discount, setDiscount] = useState<number>(0);
   const [Description, setDescription] = useState("");
   const [GalleryImages, setGalleryImages] = useState<string[]>([]);
+  const [Stock, setStock] = useState<number>(0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -36,6 +36,7 @@ const AdminProductEdit = () => {
         setFinalPrice(data.FinalPrice);
         setDiscount(data.Discount);
         setDescription(data.Description);
+        setStock(data.Stock);
         setGalleryImages(data.GalleryImages || []);
       } catch {
         toast.error("Failed to fetch product details");
@@ -47,20 +48,18 @@ const AdminProductEdit = () => {
   }, [id]);
 
   // Dropzone single image (main)
-  const {
-    getRootProps: getMainRootProps,
-    getInputProps: getMainInputProps,
-  } = useDropzone({
-    accept: { "image/*": [] },
-    onDrop: async (files) => {
-      const file = files[0];
-      if (file) {
-        const url = await uploadToCloudinary(file);
-        setImgUrl(url);
-        toast.success("Main image uploaded!");
-      }
-    },
-  });
+  const { getRootProps: getMainRootProps, getInputProps: getMainInputProps } =
+    useDropzone({
+      accept: { "image/*": [] },
+      onDrop: async (files) => {
+        const file = files[0];
+        if (file) {
+          const url = await uploadToCloudinary(file);
+          setImgUrl(url);
+          toast.success("Main image uploaded!");
+        }
+      },
+    });
 
   // Dropzone multiple images (gallery)
   const {
@@ -87,6 +86,7 @@ const AdminProductEdit = () => {
       Discount,
       Description,
       GalleryImages,
+      Stock,
     };
 
     try {
@@ -123,14 +123,22 @@ const AdminProductEdit = () => {
           </div>
           <div>
             <p className="text-sm text-gray-500">Discount</p>
-            <p className="text-lg font-medium text-gray-800">{Discount}%</p>
+            <p className="text-lg font-medium text-gray-800">
+              {Discount * 100}%
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Stock</p>
+            <p className="text-lg font-medium text-gray-800">{Stock}</p>
           </div>
         </div>
 
         {/* ====== Editable Form ====== */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium mb-1">Product Name</label>
+            <label className="block text-sm font-medium mb-1">
+              Product Name
+            </label>
             <input
               type="text"
               value={ProductName}
@@ -152,16 +160,26 @@ const AdminProductEdit = () => {
           <div>
             <label className="block text-sm font-medium mb-1">Discount</label>
             <input
-              type="number"
-              value={Discount}
-              onChange={(e) => setDiscount(Number(e.target.value))}
+              type="text"
+              value={Discount * 100}
+              onChange={(e) => setDiscount(Number(e.target.value) / 100)}
+              className="w-full border rounded-lg px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Stock</label>
+            <input
+              type="text"
+              value={Stock}
+              onChange={(e) => setStock(Number(e.target.value))}
               className="w-full border rounded-lg px-3 py-2"
             />
           </div>
 
-
           <div>
-            <label className="block text-sm font-medium mb-1">Category ID</label>
+            <label className="block text-sm font-medium mb-1">
+              Category ID
+            </label>
             <input
               type="number"
               value={CategoryId}

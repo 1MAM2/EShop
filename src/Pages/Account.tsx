@@ -10,6 +10,7 @@ const Account = () => {
   const [email, setEmail] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [isHaveAnAccount, setIsHaveAnAccount] = useState(true);
@@ -57,12 +58,17 @@ const Account = () => {
         toast.error("Address must be at least 10 characters long!");
         return;
       }
+       if (!phoneNumber || phoneNumber.length < 11) {
+        toast.error("phoneNumber must be at least 11 characters long!");
+        return;
+      }
       const req: UserRegisterDTO = {
         UserName: userName,
         Password: password,
         Role: "Customer",
         Email: email,
         Address: address,
+        PhoneNumber:phoneNumber,
       };
       await register(req);
 
@@ -72,6 +78,7 @@ const Account = () => {
       setAddress("");
       setPassword("");
       setEmail("");
+      setPhoneNumber("");
       setIsHaveAnAccount(true);
     } catch (error) {
       console.error("Register hatası:", error);
