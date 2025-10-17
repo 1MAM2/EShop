@@ -13,6 +13,7 @@ const Product = ({ props }: Props) => {
           <img
             src={props.ImgUrl}
             alt={props.ProductName}
+            loading="lazy"
             className="w-full h-full  object-contain p-2 sm:h-32 md:h-36 xl:h-full aspect-square"
           />
         </div>

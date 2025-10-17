@@ -19,7 +19,7 @@ html {
   margin-top: 30px;
 }
 .section_Slider {
-  background-image: url("/Static imgs/slider_img.jpg");
+  background-image: url("/Static imgs/slider_img.webp");
   height: 100%;
   width: 100%;
   background-repeat: no-repeat;
@@ -27,7 +27,7 @@ html {
   background-position: bottom;
 }
 .homeDiscount {
-  background-image: url("/Static imgs/HomeDiscount.jpg");
+  background-image: url("/Static imgs/HomeDiscount.webp");
   height: 100%;
   width: 100%;
   background-repeat: no-repeat;
@@ -41,15 +41,15 @@ html {
 
 .slides div:nth-child(1)
 {
-  background:url("/Static imgs/HeroSlider_1.png");
-  background-color: #c70039;
+  background:url("/Static imgs/HeroSlider_1.webp");
+  background-color: #f5f5f5;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }
 .slides div:nth-child(2)
 {
-  background:url("/Static imgs/HeroSlider_2.png");
+  background:url("/Static imgs/HeroSlider_2.webp");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -57,7 +57,7 @@ html {
 }
 .slides div:nth-child(3)
 {
-  background:url("/Static imgs/HeroSlider_3.png");
+  background:url("/Static imgs/HeroSlider_3.webp");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;

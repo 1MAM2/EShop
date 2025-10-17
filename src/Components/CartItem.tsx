@@ -34,6 +34,7 @@ const CartItem = ({
         <img
           src={ImgUrl}
           alt={ProductName}
+          loading="lazy"
           className="w-full h-full object-contain rounded-xl"
         />
       </div>

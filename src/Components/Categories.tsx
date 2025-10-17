@@ -24,11 +24,15 @@ const Categories = () => {
     fetchCategories();
   }, []);
   return (
-    <ul className="border-b-4 border-b-teal-400 bg-teal-600 text-md sm:text-xl h-[30px] w-full flex p-3 items-center justify-center gap-8 text-white shadow-md xl:text-2xl xl:h-[40px]">
+    <ul className="border-b-4 border-b-teal-400 bg-blue-700 text-md sm:text-xl h-[30px] w-full flex p-3 items-center justify-center gap-8 text-white shadow-md xl:text-2xl xl:h-[40px]">
       <li
         className={`font-bold transition-all mb-1.5 cursor-pointer
-    ${allActiveCategory ? "text-cyan-200 underline underline-offset-4" : "hover:text-cyan-400 active:text-cyan-700"}`}
-        onClick={()=>navigate(`/browse`)}
+    ${
+      allActiveCategory
+        ? "text-white underline underline-offset-4"
+        : "hover:text-gray-300 active:text-gray-500"
+    }`}
+        onClick={() => navigate(`/browse`)}
       >
         All Categories
       </li>
@@ -37,12 +41,14 @@ const Categories = () => {
         return (
           <li
             key={item.Id}
-            className={`hover:text-cyan-400 font-bold transition-all mb-1.5 cursor-pointer active:text-cyan-700 ${
+            className={`hover:text-gray-300 font-bold transition-all text-white mb-1.5 cursor-pointer active:text-gray-500 ${
               isActive
-                ? "text-cyan-200 underline underline-offset-4"
-                : "hover:text-cyan-400 active:text-cyan-700"
+                ? "text-gray-500 underline underline-offset-4"
+                : "hover:text-gray-300 active:text-gray-800"
+                
             }`}
             onClick={() => navigate(`/browse?cat=${item.Id}`)}
+            
           >
             {item.CategoryName}
           </li>
