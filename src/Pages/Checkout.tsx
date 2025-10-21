@@ -6,6 +6,9 @@ import { OrderService } from "../Services/OrderService";
 import type { OrderCreateDTO } from "../types/OrderTypes/OrderCreateDTO";
 
 const Checkout = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  console.log(loading);
+  
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -32,6 +35,7 @@ const Checkout = () => {
     // Buraya ödeme veya sipariş işlemi eklenebilir
   };
   const CreateOrder = async () => {
+    setLoading(true);
     const { fullName, email, address, city, zip, cardNumber, expiry, cvv } =
       formData;
     if (!fullName) return toast.error("Full name is required");
@@ -56,8 +60,8 @@ const Checkout = () => {
         productId: +item.ProductId,
         quantity: item.Quantity,
         unitPrice: item.Price,
-        imgUrl:item.ImgUrl,
-        productName:item.ProductName
+        imgUrl: item.ImgUrl,
+        productName: item.ProductName,
       })),
       OrderStatus: "Pending",
       FullName: fullName,
@@ -71,9 +75,13 @@ const Checkout = () => {
 
       const TransactionId = createdOrder.OrderId;
       console.log(createdOrder);
+      setLoading(false);
       navigate(`/payment/${TransactionId}`);
       clearCart();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
   return (
@@ -184,6 +192,7 @@ const Checkout = () => {
           type="submit"
           className="w-full py-4 bg-cyan-600 text-white font-bold rounded-xl shadow-md hover:bg-cyan-700 transition"
           onClick={CreateOrder}
+          disabled={loading}
         >
           Place Order
         </button>

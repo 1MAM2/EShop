@@ -93,29 +93,45 @@ const Shop = () => {
               <Product props={item} key={item.Id} />
             ))}
           </div>
-          <div className="flex justify-center gap-2 mt-4">
+          <div className="flex justify-center items-center gap-2 mt-6">
             <button
               onClick={prevPage}
               disabled={currentPage === 1}
-              className="px-2 py-1 border rounded"
+              className={`px-3 py-1.5 rounded-lg border text-xl font-medium transition-all duration-200
+      ${
+        currentPage === 1
+          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+          : "bg-white hover:bg-blue-50 border-gray-300 text-gray-700 hover:text-blue-600"
+      }`}
             >
               Prev
             </button>
+
             {[...Array(totalPages)].map((_, i) => (
               <button
                 key={i}
                 onClick={() => goToPage(i + 1)}
-                className={`px-2 py-1 border rounded ${
-                  currentPage === i + 1 ? "bg-blue-500 text-white" : ""
-                }`}
+                className={`px-3 py-1.5 rounded-lg border text-xl font-medium transition-all duration-200
+        ${
+          currentPage === i + 1
+            ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+            : "bg-white text-gray-700 border-gray-300 hover:bg-blue-50 hover:text-blue-600"
+        }`}
               >
                 {i + 1}
               </button>
             ))}
+
+            {/* Next Button */}
             <button
               onClick={nextPage}
               disabled={currentPage === totalPages}
-              className="px-2 py-1 border rounded"
+              className={`px-3 py-1.5 rounded-lg border text-xl font-medium transition-all duration-200
+      ${
+        currentPage === totalPages
+          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+          : "bg-white hover:bg-blue-50 border-gray-300 text-gray-700 hover:text-blue-600"
+      }`}
             >
               Next
             </button>

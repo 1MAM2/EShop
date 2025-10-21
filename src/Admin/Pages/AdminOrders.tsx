@@ -73,6 +73,7 @@ const OrderList = () => {
       <table className="min-w-full bg-white rounded-xl shadow-sm overflow-hidden">
         <thead className="bg-gray-100 text-left">
           <tr>
+            <th className="py-3 px-4">Order Id</th>
             <th className="py-3 px-4">Customer</th>
             <th className="py-3 px-4">Total Price</th>
             <th className="py-3 px-4">Last Status Update</th>
@@ -87,6 +88,7 @@ const OrderList = () => {
                 className="border-b hover:bg-gray-50 transition-colors cursor-pointer"
                 onClick={() => toggleExpand(order.OrderId)}
               >
+                <td className="py-3 px-4">{order.OrderId}</td>
                 <td className="py-3 px-4">{order.UserId}</td>
                 <td className="py-3 px-4">{order.TotalPrice.toFixed(2)} ₺</td>
                 <td className="py-3 px-4">

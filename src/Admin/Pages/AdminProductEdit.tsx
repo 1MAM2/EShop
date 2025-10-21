@@ -22,6 +22,7 @@ const AdminProductEdit = () => {
   const [Discount, setDiscount] = useState<number>(0);
   const [Description, setDescription] = useState("");
   const [GalleryImages, setGalleryImages] = useState<string[]>([]);
+  const [IsDeleted, setIsDeleted] = useState<boolean>(false);
   const [Stock, setStock] = useState<number>(0);
 
   useEffect(() => {
@@ -37,6 +38,7 @@ const AdminProductEdit = () => {
         setDiscount(data.Discount);
         setDescription(data.Description);
         setStock(data.Stock);
+        setIsDeleted(data.IsDeleted);
         setGalleryImages(data.GalleryImages || []);
       } catch {
         toast.error("Failed to fetch product details");
@@ -87,6 +89,7 @@ const AdminProductEdit = () => {
       Description,
       GalleryImages,
       Stock,
+      IsDeleted,
     };
 
     try {
@@ -125,6 +128,12 @@ const AdminProductEdit = () => {
             <p className="text-sm text-gray-500">Discount</p>
             <p className="text-lg font-medium text-gray-800">
               {Discount * 100}%
+            </p>
+          </div>
+            <div>
+            <p className="text-sm text-gray-500">Deleted</p>
+            <p className="text-lg font-medium text-gray-800">
+              {IsDeleted}
             </p>
           </div>
           <div>

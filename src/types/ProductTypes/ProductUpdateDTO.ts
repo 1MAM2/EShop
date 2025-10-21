@@ -6,6 +6,7 @@ export interface ProductUpdateDTO {
   FinalPrice: number;
   Discount: number;
   Description: string;
+  IsDeleted:boolean;
   GalleryImages: string[];
   Stock:number;
 }

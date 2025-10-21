@@ -8,8 +8,9 @@ export interface ProductReadDTO
     CategoryId:number,
     FinalPrice:number,
     Discount:number,
-    CreateTime:string;
-    Description:string
-    GalleryImages:string[]
-    Stock:number
+    CreateTime:string,
+    Description:string,
+    GalleryImages:string[],
+    IsDeleted:boolean,
+    Stock:number,
 }
