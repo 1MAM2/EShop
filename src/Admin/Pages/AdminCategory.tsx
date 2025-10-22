@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { AdminService } from "../../Services/AdminService";
 import { FaTrash, FaPlus } from "react-icons/fa";
-import { usePagination } from "../../Custom Hooks/usePagination";
 import Loading from "../../Components/Loading";
 import type { CategoryReadDTO } from "../../types/CategoryTypes/CategoryReadDTO";
 
@@ -14,7 +13,6 @@ export default function AdminCategories() {
   const [editingValue, setEditingValue] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const itemsPerPage = 5;
 
   // 🔹 Fetch categories
   useEffect(() => {
@@ -31,12 +29,10 @@ export default function AdminCategories() {
     fetchCategories();
   }, []);
 
-  // 🔹 Filter & Pagination
+  // Filter & Pagination
   const filteredCategories = categories.filter((c) =>
     c.CategoryName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const { currentPage, totalPages, currentData, goToPage, nextPage, prevPage } =
-    usePagination(filteredCategories, itemsPerPage);
 
   // 🔹 Add category
   const handleAddCategory = async () => {
@@ -124,7 +120,7 @@ export default function AdminCategories() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {currentData().map((c) => (
+              {filteredCategories.map((c) => (
                 <tr
                   key={c.Id}
                   className="hover:bg-blue-50 hover:shadow-md transition-all duration-150 rounded-lg"
@@ -170,33 +166,6 @@ export default function AdminCategories() {
       )}
 
       {/* Pagination */}
-      <div className="flex justify-center gap-2 mt-4">
-        <button
-          onClick={prevPage}
-          disabled={currentPage === 1}
-          className="px-2 py-1 border rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goToPage(i + 1)}
-            className={`px-2 py-1 border rounded ${
-              currentPage === i + 1 ? "bg-blue-500 text-white" : ""
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-        <button
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
-          className="px-2 py-1 border rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
 
       {/* Add Category */}
       <div className="mt-4 flex flex-col sm:flex-row items-center gap-2">

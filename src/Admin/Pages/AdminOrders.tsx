@@ -1,40 +1,43 @@
 import { useEffect, useState } from "react";
 import Loading from "../../Components/Loading";
 import { AdminService } from "../../Services/AdminService";
-import type { OrderReadDTO } from "../../types/OrderTypes/OrderReadDTO";
+import type {
+  OrderReadDTO,
+  OrderStatus,
+} from "../../types/OrderTypes/OrderReadDTO";
 import { motion, AnimatePresence } from "framer-motion";
 import React from "react";
 
-export const statusMap: Record<number, string> = {
-  0: "Cancelled",
-  1: "Paid",
-  2: "Pending",
-  3: "Processing",
-  4: "Shipped",
-  5: "Delivered",
+export const statusMap: Record<OrderStatus, string> = {
+  Cancelled: "Cancelled",
+  Paid: "Paid",
+  Pending: "Pending",
+  Processing: "Processing",
+  Shipped: "Shipped",
+  Delivered: "Delivered",
 };
 
 // Renk haritası
-export const colorMap: Record<number, string> = {
-  0: "bg-red-100 text-red-800",
-  1: "bg-green-100 text-green-800",
-  2: "bg-yellow-100 text-yellow-800",
-  3: "bg-blue-100 text-blue-800",
-  4: "bg-blue-300 text-blue-800",
-  5: "bg-green-300 text-green-800",
+export const colorMap: Record<OrderStatus, string> = {
+  Cancelled: "bg-red-100 text-red-800",
+  Paid: "bg-green-100 text-green-800",
+  Pending: "bg-yellow-100 text-yellow-800",
+  Processing: "bg-blue-100 text-blue-800",
+  Shipped: "bg-blue-300 text-blue-800",
+  Delivered: "bg-green-300 text-green-800",
 };
 
 const OrderList = () => {
   const [orders, setOrders] = useState<OrderReadDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [newStatus, setNewStatus] = useState<number | null>(null);
+  const [newStatus, setNewStatus] = useState<OrderStatus | null>(null);
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
 
   // Siparişleri çek
   useEffect(() => {
     fetchOrders();
-  }, [orders]);
+  }, []);
 
   const fetchOrders = async () => {
     try {
@@ -49,10 +52,16 @@ const OrderList = () => {
 
   // Durumu güncelle
 
-  const updateOrderStatus = async (orderId: number, statusNum: number) => {
+  const updateOrderStatus = async (orderId: number, status: string) => {
     try {
-      await AdminService.updateOrderStatus(orderId, statusNum.toString());
-
+      await AdminService.updateOrderStatus(orderId, status.toString());
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.OrderId === orderId
+            ? { ...order, Status: statusMap[order.Status] as OrderStatus }
+            : order
+        )
+      );
       setEditingId(null);
       setNewStatus(null);
     } catch (err) {
@@ -65,6 +74,7 @@ const OrderList = () => {
   };
 
   if (loading) return <Loading />;
+  console.log(orders);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -103,24 +113,30 @@ const OrderList = () => {
                 <td className="py-3 px-4">
                   {editingId === order.OrderId ? (
                     <select
-                      value={newStatus ?? order.Status}
-                      onChange={(e) => setNewStatus(Number(e.target.value))}
+                      value={newStatus ?? order.Status} // artık string
+                      onChange={(e) =>
+                        setNewStatus(e.target.value as OrderStatus)
+                      }
                       onClick={(e) => e.stopPropagation()}
                       className="border rounded-md p-1 text-sm"
                     >
-                      {Object.entries(statusMap).map(([key, label]) => (
-                        <option key={key} value={key}>
-                          {label}
-                        </option>
-                      ))}
+                      {Object.entries(statusMap)
+                        .filter(([_, label]) =>
+                          Object.values(statusMap).includes(label)
+                        )
+                        .map(([num, label]) => (
+                          <option key={num} value={label}>
+                            {label}
+                          </option>
+                        ))}
                     </select>
                   ) : (
                     <span
                       className={`px-2 py-1 text-xs font-semibold rounded-md ${
-                        colorMap[Number(order.Status)]
+                        colorMap[order.Status] // artık string
                       }`}
                     >
-                      {statusMap[Number(order.Status)]}
+                      {order.Status}
                     </span>
                   )}
                 </td>
@@ -131,7 +147,7 @@ const OrderList = () => {
                         onClick={() =>
                           updateOrderStatus(
                             order.OrderId,
-                            newStatus ?? Number(order.Status)
+                            newStatus ?? order.Status
                           )
                         }
                         className="bg-green-600 text-white px-3 py-1 text-sm rounded-md hover:bg-green-700 transition"
@@ -153,7 +169,7 @@ const OrderList = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         setEditingId(order.OrderId);
-                        setNewStatus(Number(order.Status));
+                        setNewStatus(order.Status);
                       }}
                       className="text-blue-600 hover:underline text-sm"
                     >

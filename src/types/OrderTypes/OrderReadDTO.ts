@@ -11,7 +11,8 @@ export interface OrderReadDTO {
   ProductName:string
 }
 
-export type OrderStatus = 
+export type OrderStatus =
+    "Paid"
   | "Pending"
   | "Processing"
   | "Shipped"

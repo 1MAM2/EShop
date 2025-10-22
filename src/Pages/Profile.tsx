@@ -53,8 +53,6 @@ const Profile = () => {
     const fetchOrders = async () => {
       try {
         const data = await OrderService.userGetAllOrder();
-        console.log(data);
-
         setOrders(data);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -184,9 +182,9 @@ const Profile = () => {
         )}
 
         <div className="space-y-4">
-          {orders.map((order) => (
+          {orders.map((order, index) => (
             <div
-              key={order.OrderId}
+              key={index}
               className="p-4 bg-white shadow rounded-lg flex justify-between items-center"
               onClick={() => toggleOrder(order.OrderId)}
             >

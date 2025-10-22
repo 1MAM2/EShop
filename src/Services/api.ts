@@ -79,7 +79,7 @@ api.interceptors.response.use(
         processQueue(err, null);
         // localStorage.removeItem("accessToken");
         // localStorage.removeItem("refreshToken");
-        // window.location.href = "/account";
+        window.location.href = "/account";
         console.log(err);
 
         return Promise.reject(err);

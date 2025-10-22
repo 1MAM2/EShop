@@ -28,15 +28,17 @@ export const ProductProvider = ({
   const [products, setProducts] = useState<ProductReadDTO[]>([]);
   const [product, setProduct] = useState<ProductReadDTO | null>(null);
   const [isLoading, setIsloading] = useState(false);
+  const [Page] = useState(1);
+  const itemsPerPage = 10;
   const [error, setError] = useState<string | null>(null);
 
   const fetchProducts = async () => {
     try {
       setIsloading(true);
       setError(null);
-      const res = await ProductService.getAll();
+      const res = await ProductService.getAll(Page, itemsPerPage);
       if (!res) throw new Error("Ürünler yüklenemedi");
-      setProducts(res);
+      setProducts(res?.Products ?? []);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -58,8 +60,6 @@ export const ProductProvider = ({
   }, []);
 
   const clearSingleProduct = () => setProduct(null);
-
- 
 
   useEffect(() => {
     fetchProducts();

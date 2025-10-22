@@ -6,9 +6,6 @@ import { OrderService } from "../Services/OrderService";
 import type { OrderCreateDTO } from "../types/OrderTypes/OrderCreateDTO";
 
 const Checkout = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  console.log(loading);
-  
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -35,52 +32,62 @@ const Checkout = () => {
     // Buraya ödeme veya sipariş işlemi eklenebilir
   };
   const CreateOrder = async () => {
-    setLoading(true);
-    const { fullName, email, address, city, zip, cardNumber, expiry, cvv } =
-      formData;
-    if (!fullName) return toast.error("Full name is required");
-    if (!/\S+@\S+\.\S+/.test(email))
-      return toast.error("Invalid email address");
-    if (!address) return toast.error("Address is required");
-    if (!city) return toast.error("City name is required");
-    if (!zip) return toast.error("Zip is required");
-    if (!cardNumber) return toast.error("CardNumber name is required");
-    if (!expiry) return toast.error("Expiry date is required");
-    if (!cvv) return toast.error("CVV date is required");
-
-    toast.info(
-      "You’re being redirected for payment verification. Please wait..."
-    );
-    const newOrder: OrderCreateDTO = {
-      TotalPrice: cartItems.reduce(
-        (sum, item) => sum + item.Price * item.Quantity,
-        0
-      ),
-      orderItems: cartItems.map((item) => ({
-        productId: +item.ProductId,
-        quantity: item.Quantity,
-        unitPrice: item.Price,
-        imgUrl: item.ImgUrl,
-        productName: item.ProductName,
-      })),
-      OrderStatus: "Pending",
-      FullName: fullName,
-      Email: email,
-      Address: address,
-      City: city,
-      ZipCode: zip,
-    };
     try {
+      const { fullName, email, address, city, zip, cardNumber, expiry, cvv } =
+        formData;
+      if (!fullName)
+        return toast.error("Full name is required", { toastId: "validation" });
+      if (!/\S+@\S+\.\S+/.test(email))
+        return toast.error("Invalid email address", { toastId: "validation" });
+      if (!address)
+        return toast.error("Address is required", { toastId: "validation" });
+      if (!city)
+        return toast.error("City name is required", { toastId: "validation" });
+      if (!zip)
+        return toast.error("Zip is required", { toastId: "validation" });
+      if (!cardNumber)
+        return toast.error("CardNumber name is required", {
+          toastId: "validation",
+        });
+      if (!expiry)
+        return toast.error("Expiry date is required", {
+          toastId: "validation",
+        });
+      if (!cvv)
+        return toast.error("CVV date is required", { toastId: "validation" });
+
+      toast.info(
+        "You’re being redirected for payment verification. Please wait..."
+      );
+      const newOrder: OrderCreateDTO = {
+        TotalPrice: cartItems.reduce(
+          (sum, item) => sum + item.Price * item.Quantity,
+          0
+        ),
+        orderItems: cartItems.map((item) => ({
+          productId: +item.ProductId,
+          quantity: item.Quantity,
+          unitPrice: item.Price,
+          imgUrl: item.ImgUrl,
+          productName: item.ProductName,
+        })),
+        OrderStatus: "Pending",
+        FullName: fullName,
+        Email: email,
+        Address: address,
+        City: city,
+        ZipCode: zip,
+      };
+
       const createdOrder = await OrderService.createOrder(newOrder);
 
       const TransactionId = createdOrder.OrderId;
       console.log(createdOrder);
-      setLoading(false);
       navigate(`/payment/${TransactionId}`);
       clearCart();
     } catch (error) {
       console.log(error);
-      setLoading(false);
+    } finally {
     }
   };
 
@@ -192,7 +199,6 @@ const Checkout = () => {
           type="submit"
           className="w-full py-4 bg-cyan-600 text-white font-bold rounded-xl shadow-md hover:bg-cyan-700 transition"
           onClick={CreateOrder}
-          disabled={loading}
         >
           Place Order
         </button>
