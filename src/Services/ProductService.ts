@@ -6,8 +6,20 @@ import api from "./api";
 const BASE_URL: string = `${import.meta.env.VITE_API_URL}/api/product`;
 
 export const ProductService = {
-  async getAll(): Promise<ProductReadDTO[]> {
-    const res = await api.get(BASE_URL);
+  async getAll(
+    page = 1,
+    pageSize = 10
+  ): Promise<
+    Promise<{
+      TotalItems: number;
+      Page: number;
+      PageSize: number;
+      Products: ProductReadDTO[];
+    }>
+  > {
+    const res = await api.get(
+      `${BASE_URL}/?page=${page}&pageSize=${pageSize}`
+    );
     return res.data;
   },
   async getById(Id: number): Promise<ProductReadDTO> {

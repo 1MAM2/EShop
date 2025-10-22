@@ -14,8 +14,13 @@ const BaseUrl = `${import.meta.env.VITE_API_URL}/api`;
 
 export const AdminService = {
   //  Product
-  async GetAllProducts(): Promise<ProductReadDTO[]> {
-    const res = await api.get(`${BaseUrl}/Product/adminGetAll`);
+  async GetAllProducts(page = 1, pageSize = 10): Promise<{
+    TotalItems: number;
+    Page: number;
+    PageSize: number;
+    Products: ProductReadDTO[];
+  }> {
+    const res = await api.get(`${BaseUrl}/Product/adminGetAll?page=${page}&pageSize=${pageSize}`);
     return res.data;
   },
 
@@ -60,7 +65,7 @@ export const AdminService = {
     const res = await api.get(`${BaseUrl}/Product/${id}`);
     return res.data;
   },
-//Category
+  //Category
   async GetAllCategories(): Promise<CategoryReadDTO[]> {
     const res = await api.get(`${BaseUrl}/Category`);
     return res.data;
@@ -90,10 +95,10 @@ export const AdminService = {
     toast.info("Category updated");
     return res.data;
   },
-//Order
+  //Order
   async GetAllOrders(): Promise<OrderReadDTO[]> {
     const res = await api.get(`${BaseUrl}/Order`);
-    
+
     return res.data;
   },
 
@@ -111,7 +116,7 @@ export const AdminService = {
     await api.delete(`${BaseUrl}/Order/${id}`);
     toast.warning("Order deleted");
   },
-//User
+  //User
   async getAllUsers(): Promise<UserReadDTO[]> {
     const res = await api.get(`${BaseUrl}/User`);
     return res.data;

@@ -24,6 +24,8 @@ const AdminProductEdit = () => {
   const [GalleryImages, setGalleryImages] = useState<string[]>([]);
   const [IsDeleted, setIsDeleted] = useState<boolean>(false);
   const [Stock, setStock] = useState<number>(0);
+  console.log(IsDeleted);
+  
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -130,10 +132,10 @@ const AdminProductEdit = () => {
               {Discount * 100}%
             </p>
           </div>
-            <div>
+          <div>
             <p className="text-sm text-gray-500">Deleted</p>
             <p className="text-lg font-medium text-gray-800">
-              {IsDeleted}
+              {IsDeleted ? "Deleted" : "Available"}
             </p>
           </div>
           <div>
@@ -183,6 +185,17 @@ const AdminProductEdit = () => {
               onChange={(e) => setStock(Number(e.target.value))}
               className="w-full border rounded-lg px-3 py-2"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Delete</label>
+            <select
+              value={IsDeleted ? "true" : "false"}
+              onChange={(e) => setIsDeleted(e.target.value === "true")}
+              className="w-full border rounded-lg px-3 py-2"
+            >
+              <option value="false">Available</option>
+              <option value="true">Deleted</option>
+            </select>
           </div>
 
           <div>

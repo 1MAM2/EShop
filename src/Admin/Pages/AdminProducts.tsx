@@ -5,25 +5,27 @@ import CreateProduct from "../Companents/CreateProduct";
 import { useNavigate } from "react-router-dom";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
 import Loading from "../../Components/Loading";
-import { usePagination } from "../../Custom Hooks/usePagination";
-
 export default function AdminProducts() {
-  const [products, setProducts] = useState<ProductReadDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [products, setProducts] = useState<ProductReadDTO[]>([]);
+  const [page, setPage] = useState(1);
+  const [TotalItems, setTotalItems] = useState(0);
   const navigate = useNavigate();
 
   // 🔹 Stok düzenleme durumları
   const [editingStockId, setEditingStockId] = useState<number | null>(null);
   const [newStock, setNewStock] = useState<number>(0);
-
-  // 🟢 Fetch products
+  const itemsPerPage = 10;
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await AdminService.GetAllProducts();
-        setProducts(data);
+        const data = await AdminService.GetAllProducts(page, itemsPerPage);
+        setProducts(data?.Products ?? []);
+
+        setTotalItems(data.TotalItems);
+        console.log(data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -31,7 +33,7 @@ export default function AdminProducts() {
       }
     };
     fetchProducts();
-  }, []);
+  }, [page]);
 
   const handleProductClick = (id: number) => {
     navigate(`/admin-panel/adminProducts/${id}`);
@@ -67,7 +69,6 @@ export default function AdminProducts() {
   const handleSaveStock = async (id: number) => {
     try {
       await AdminService.updateProductStock(id, newStock);
-      // products state'ini güncelle
       setProducts((prev) =>
         prev.map((p) => (p.Id === id ? { ...p, Stock: newStock } : p))
       );
@@ -84,9 +85,9 @@ export default function AdminProducts() {
   );
 
   // 🔹 Pagination
-  const itemsPerPage = 5;
-  const { currentPage, totalPages, currentData, goToPage, nextPage, prevPage } =
-    usePagination(filteredProducts, itemsPerPage);
+  // const itemsPerPage = 5;
+  // const { currentPage, totalPages, currentData, goToPage, nextPage, prevPage } =
+  //   usePagination(filteredProducts, itemsPerPage);
 
   return (
     <div className="space-y-4">
@@ -135,7 +136,7 @@ export default function AdminProducts() {
               </tr>
             </thead>
             <tbody className="text-xl">
-              {currentData().map((p) => (
+              {filteredProducts.map((p) => (
                 <tr
                   key={p.Id}
                   className="bg-white hover:bg-blue-50 hover:shadow-md transition-all duration-150 rounded-lg cursor-pointer"
@@ -174,8 +175,8 @@ export default function AdminProducts() {
                             e.stopPropagation();
                             handleSaveStock(p.Id);
                           }}
-                          className="text-green-600 hover:text-green-800"
-                          title="Save"
+                          className="flex items-center justify-center px-2 py-1 rounded-md bg-green-600 text-white hover:bg-green-700 transition"
+                          title="Save Stock"
                         >
                           <FaSave />
                         </button>
@@ -188,7 +189,7 @@ export default function AdminProducts() {
                             e.stopPropagation();
                             handleStockEdit(p.Id, p.Stock);
                           }}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="flex items-center justify-center px-2 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
                           title="Edit Stock"
                         >
                           <FaEdit />
@@ -208,10 +209,10 @@ export default function AdminProducts() {
                     />
                   </td>
 
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-4 py-3 text-center flex justify-center gap-2">
                     <button
                       onClick={(e) => handleDeleteProduct(e, p.Id)}
-                      className="text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded-md transition-colors"
+                      className="flex items-center justify-center px-2 py-1 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
                       title="Delete Product"
                     >
                       <FaTrash />
@@ -221,41 +222,49 @@ export default function AdminProducts() {
               ))}
             </tbody>
           </table>
+          <div className="flex justify-center gap-2 mt-4">
+            <button
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page === 1}
+              className="px-3 py-1 rounded-md border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-50 transition"
+            >
+              Prev
+            </button>
+
+            {[...Array(Math.ceil(TotalItems / itemsPerPage))].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i + 1)}
+                className={`px-3 py-1 rounded-md border border-gray-300 transition ${
+                  page === i + 1
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              onClick={() =>
+                setPage((prev) =>
+                  Math.min(prev + 1, Math.ceil(TotalItems / itemsPerPage))
+                )
+              }
+              disabled={page === Math.ceil(TotalItems / itemsPerPage)}
+              className="px-3 py-1 rounded-md border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-50 transition"
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
 
-      <div className="flex justify-center gap-2 mt-4">
-        <button
-          onClick={prevPage}
-          disabled={currentPage === 1}
-          className="px-2 py-1 border rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goToPage(i + 1)}
-            className={`px-2 py-1 border rounded ${
-              currentPage === i + 1 ? "bg-blue-500 text-white" : ""
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-        <button
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
-          className="px-2 py-1 border rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
-
+      {/* 🔹 Create Product */}
       <div className="mt-4">
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
         >
           Create Product
         </button>

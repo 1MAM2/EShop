@@ -6,10 +6,9 @@ import { CategoryService } from "../Services/CategoryService";
 import type { ProductReadDTO } from "../types/ProductTypes/PrdocutReadDTO";
 import { ProductService } from "../Services/ProductService";
 import Loading from "../Components/Loading";
-import { usePagination } from "../Custom Hooks/usePagination";
 const Shop = () => {
   // Ana Kaynak
-  const [allProducts, setAllProducts] = useState<ProductReadDTO[]>([]);
+  const [products, setProducts] = useState<ProductReadDTO[]>([]);
   const [categoryProducts, setCategoryProducts] = useState<ProductReadDTO[]>(
     []
   );
@@ -17,24 +16,29 @@ const Shop = () => {
   const [searchParams] = useSearchParams();
   const categoryIdParam = searchParams.get("cat");
   const categoryId = categoryIdParam ? Number(categoryIdParam) : undefined;
-
+  const [loading, setLoading] = useState(true);
+  const [Page, setPage] = useState(1);
+  const [TotalItems, setTotalItems] = useState(0);
+  const itemsPerPage = 10;
   const [searchString, setSearchString] = useState("");
-  const [isLoading, setIsloading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchAll = async () => {
+      setLoading(true);
       try {
-        setIsloading(true);
-        const data = await ProductService.getAll();
-        setAllProducts(data);
-        setIsloading(false);
-      } catch (e) {
-        console.error("Ürünler alınamadı", e);
-        setIsloading(false);
+        const data = await ProductService.getAll(Page, itemsPerPage);
+        setProducts(data?.Products ?? []);
+        setTotalItems(data?.TotalItems ?? 0);
+      } catch (err) {
+        console.error(err);
+        setProducts([]);
+        setTotalItems(0);
+      } finally {
+        setLoading(false);
       }
     };
     fetchAll();
-  }, []);
+  }, [Page]);
 
   //Kategori varsa Fetch
   useEffect(() => {
@@ -44,32 +48,29 @@ const Shop = () => {
         return;
       }
       try {
-        setIsloading(true);
+        setLoading(true);
         const data = await CategoryService.getProductsByCategory(categoryId);
         setCategoryProducts(data);
-        setIsloading(false);
+        setLoading(false);
       } catch (e) {
         console.error("Filtreleme başarısız", e);
-        setIsloading(false);
+        setLoading(false);
       }
     };
     fetchByCat();
   }, [categoryId]);
-
+  const maxPage = Math.ceil(TotalItems / itemsPerPage);
   // content
-  const productList = categoryId ? categoryProducts : allProducts;
+  const productList = categoryId ? categoryProducts : products;
 
   const filteredList = useMemo(() => {
     const q = searchString.trim().toLowerCase();
     if (q.length < 3) return productList;
     return productList.filter((p) => p.ProductName.toLowerCase().includes(q));
   }, [productList, searchString]);
-  const itemsPerPage = 2;
-  const { currentPage, totalPages, currentData, goToPage, nextPage, prevPage } =
-    usePagination(filteredList, itemsPerPage);
   return (
     <>
-      {isLoading ? (
+      {loading ? (
         <Loading />
       ) : (
         <div className="shopPage flex  justify-center flex-col items-center sm:">
@@ -89,49 +90,37 @@ const Shop = () => {
           </div>
 
           <div className="listProductsShopPage grid grid-cols-1 sm:grid-cols-2 sm:gap-10 md:grid-cols-2 place-items-center lg:grid-cols-4  my-6 ">
-            {currentData().map((item) => (
+            {filteredList.map((item) => (
               <Product props={item} key={item.Id} />
             ))}
           </div>
-          <div className="flex justify-center items-center gap-2 mt-6">
+          <div className="flex justify-center gap-2 mt-4">
             <button
-              onClick={prevPage}
-              disabled={currentPage === 1}
-              className={`px-3 py-1.5 rounded-lg border text-xl font-medium transition-all duration-200
-      ${
-        currentPage === 1
-          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-          : "bg-white hover:bg-blue-50 border-gray-300 text-gray-700 hover:text-blue-600"
-      }`}
+              onClick={() => setPage(Page - 1)}
+              disabled={Page === 1}
+              className="px-3 py-1 rounded-md border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-50 transition"
             >
               Prev
             </button>
 
-            {[...Array(totalPages)].map((_, i) => (
+            {[...Array(maxPage)].map((_, i) => (
               <button
                 key={i}
-                onClick={() => goToPage(i + 1)}
-                className={`px-3 py-1.5 rounded-lg border text-xl font-medium transition-all duration-200
-        ${
-          currentPage === i + 1
-            ? "bg-blue-600 text-white border-blue-600 shadow-sm"
-            : "bg-white text-gray-700 border-gray-300 hover:bg-blue-50 hover:text-blue-600"
-        }`}
+                onClick={() => setPage(i + 1)}
+                className={`px-3 py-1 rounded-md border border-gray-300 transition ${
+                  Page === i + 1
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
               >
                 {i + 1}
               </button>
             ))}
 
-            {/* Next Button */}
             <button
-              onClick={nextPage}
-              disabled={currentPage === totalPages}
-              className={`px-3 py-1.5 rounded-lg border text-xl font-medium transition-all duration-200
-      ${
-        currentPage === totalPages
-          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-          : "bg-white hover:bg-blue-50 border-gray-300 text-gray-700 hover:text-blue-600"
-      }`}
+              onClick={() => setPage(Page + 1)}
+              disabled={Page === maxPage}
+              className="px-3 py-1 rounded-md border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-50 transition"
             >
               Next
             </button>
