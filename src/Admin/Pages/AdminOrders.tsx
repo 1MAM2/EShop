@@ -8,13 +8,13 @@ import type {
 import { motion, AnimatePresence } from "framer-motion";
 import React from "react";
 
-export const statusMap: Record<OrderStatus, string> = {
-  Cancelled: "Cancelled",
-  Paid: "Paid",
-  Pending: "Pending",
-  Processing: "Processing",
-  Shipped: "Shipped",
-  Delivered: "Delivered",
+export const statusMap: Record<number, OrderStatus> = {
+  0: "Cancelled",
+  1: "Paid",
+  2: "Pending",
+  3: "Processing",
+  4: "Shipped",
+  5: "Delivered",
 };
 
 // Renk haritası
@@ -37,12 +37,16 @@ const OrderList = () => {
   // Siparişleri çek
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [orders]);
 
   const fetchOrders = async () => {
     try {
       const res = await AdminService.GetAllOrders();
-      setOrders(res);
+      const mappedOrders = res.map((order) => ({
+        ...order,
+        Status: statusMap[order.Status], // artık string olacak
+      }));
+      setOrders(mappedOrders);
     } catch (err) {
       console.error("Siparişler alınamadı:", err);
     } finally {
@@ -52,16 +56,20 @@ const OrderList = () => {
 
   // Durumu güncelle
 
-  const updateOrderStatus = async (orderId: number, status: string) => {
+  const updateOrderStatus = async (orderId: number, status: OrderStatus) => {
     try {
-      await AdminService.updateOrderStatus(orderId, status.toString());
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.OrderId === orderId
-            ? { ...order, Status: statusMap[order.Status] as OrderStatus }
-            : order
+      // string -> number (backend için)
+      const statusNum = Number(
+        Object.entries(statusMap).find(([key, value]) => value === status)?.[0]
+      );
+      await AdminService.updateOrderStatus(orderId, statusNum.toString());
+
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.OrderId === orderId ? { ...order, Status: status } : order
         )
       );
+
       setEditingId(null);
       setNewStatus(null);
     } catch (err) {
@@ -124,8 +132,8 @@ const OrderList = () => {
                         .filter(([_, label]) =>
                           Object.values(statusMap).includes(label)
                         )
-                        .map(([num, label]) => (
-                          <option key={num} value={label}>
+                        .map(([_, label]) => (
+                          <option key={_} value={label}>
                             {label}
                           </option>
                         ))}
