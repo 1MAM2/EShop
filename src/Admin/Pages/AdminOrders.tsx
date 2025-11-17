@@ -44,7 +44,7 @@ const OrderList = () => {
       const res = await AdminService.GetAllOrders();
       const mappedOrders = res.map((order) => ({
         ...order,
-        Status: statusMap[order.Status], // artık string olacak
+        Status: statusMap[Number(order.Status)] as OrderStatus, // artık string olacak
       }));
       setOrders(mappedOrders);
     } catch (err) {
@@ -60,7 +60,7 @@ const OrderList = () => {
     try {
       // string -> number (backend için)
       const statusNum = Number(
-        Object.entries(statusMap).find(([key, value]) => value === status)?.[0]
+        Object.entries(statusMap).find(([_, value]) => value === status)?.[0]
       );
       await AdminService.updateOrderStatus(orderId, statusNum.toString());
 

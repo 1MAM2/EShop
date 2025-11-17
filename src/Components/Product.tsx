@@ -8,7 +8,7 @@ type Props = {
 const Product = ({ props }: Props) => {
   return (
     <Link to={`/product/${props.Id}`}>
-      <div className="bg-white relative rounded-lg hover:scale-105 xl:shadow-xl xl:w-[250px] xl:h-[250px] 2xl:w-[250px] 2xl:h-[250px] 2xl:shadow-xl p-8 shadow-md transition-all flex flex-col items-center justify-around my-5 sm:w-[150px] sm:h-[200px] xl:p-12 sm:p-5 sm:justify-center max-sm:w-[200px] max-sm:h-[250px]">
+      <div style={{boxShadow:"0px 10px 25px rgba(0,0,0,0.08)"}} className="bg-white relative rounded-lg hover:scale-105 xl:w-[250px] xl:h-[250px] 2xl:w-[250px] 2xl:h-[250px]  p-8 transition-all flex flex-col items-center justify-around my-5 sm:w-[150px] sm:h-[200px] xl:p-12 sm:p-5 sm:justify-center max-sm:w-[200px] max-sm:h-[250px]">
         <div className=" xl:w-[150px] xl:h-[150px] 2xl:w-[150px] 2xl:h-[100px]">
           <img
             src={props.ImgUrl}

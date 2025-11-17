@@ -24,13 +24,13 @@ const Categories = () => {
     fetchCategories();
   }, []);
   return (
-    <ul className="border-b-4 border-b-teal-400 bg-blue-700 text-md sm:text-xl h-[30px] w-full flex p-3 items-center justify-center gap-8 text-white shadow-md xl:text-2xl xl:h-[40px]">
+    <ul className="border-b-4 border-b-blue-500 bg-blue-800 text-md sm:text-xl h-[30px] w-full flex p-3 items-center justify-center gap-8 text-white shadow-md xl:text-2xl xl:h-[40px]">
       <li
-        className={`font-bold transition-all mb-1.5 cursor-pointer
+        className={`font-bold transition-all mb-1.5 cursor-pointer hover:text-blue-500 active:text-blue-300
     ${
       allActiveCategory
         ? "text-white underline underline-offset-4"
-        : "hover:text-gray-300 active:text-gray-500"
+        : "hover:text-blue-500 active:text-blue-300"
     }`}
         onClick={() => navigate(`/browse`)}
       >
@@ -41,14 +41,12 @@ const Categories = () => {
         return (
           <li
             key={item.Id}
-            className={`hover:text-gray-300 font-bold transition-all text-white mb-1.5 cursor-pointer active:text-gray-500 ${
+            className={`hover:text-blue-500 font-bold transition-all text-white mb-1.5 cursor-pointer active:text-blue-300 ${
               isActive
-                ? "text-gray-500 underline underline-offset-4"
-                : "hover:text-gray-300 active:text-gray-800"
-                
+                ? "underline underline-offset-4"
+                : "hover:text-blue-500 active:text-blue-300"
             }`}
             onClick={() => navigate(`/browse?cat=${item.Id}`)}
-            
           >
             {item.CategoryName}
           </li>
