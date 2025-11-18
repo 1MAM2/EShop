@@ -55,7 +55,8 @@ https://e-shop-roan-eight.vercel.app
 * Product Details 2:
  <img width="1902" height="907" alt="Ekran görüntüsü 2025-11-18 140525" src="https://github.com/user-attachments/assets/80ee1a58-415d-4841-9f4f-04b899416241" />
 * Cart Sayfası:
-  https://github.com/user-attachments/assets/d57d3512-f29d-47e9-aed4-5c830b827c1b
+  <img width="1901" height="913" alt="Ekran görüntüsü 2025-11-18 222722" src="https://github.com/user-attachments/assets/05571fba-ec23-4113-8f40-a6cf34dcfc66" />
+
   *Admin Pages
       *Dashboard:
 <img width="1897" height="908" alt="AdminPanelDashboard1" src="https://github.com/user-attachments/assets/72aac2a3-4aa5-4ae0-9114-c8040f54028c" />
